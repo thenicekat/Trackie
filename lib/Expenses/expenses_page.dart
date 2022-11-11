@@ -17,10 +17,21 @@ class _ExpensesPageState extends State<ExpensesPage> {
     id
     itemName
     place
-    price
-    quantity
     totalPaid
   }
+}""";
+
+  final String _generateMonthlyAnalysisQuery = """
+  query GenerateMonthlyAnalysis(\$month: Float!, \$year: Float!) {
+    generateMonthlyExpense (
+        month: \$month,
+        year: \$year
+    ){
+        id
+        month
+        year
+        totalSpent
+    }
 }""";
 
   List<int> month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -37,35 +48,66 @@ class _ExpensesPageState extends State<ExpensesPage> {
         home: Scaffold(
           body: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Center(
-                  child: Container(
-                    width: 300,
-                    height: 150,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20.0),
-                        bottomRight: Radius.circular(20.0),
-                        topLeft: Radius.circular(20.0),
-                        bottomLeft: Radius.circular(20.0),
-                      ),
+              Query(
+                options: QueryOptions(
+                  document: gql(_generateMonthlyAnalysisQuery),
+                  variables: {
+                    "month": monthDropDownValue,
+                    "year": yearDropDownValue
+                  }
+                ),
+                builder: (QueryResult? result,
+                    {VoidCallback? refetch, FetchMore? fetchMore}) {
+                  debugPrint(result.toString());
+
+                  if (result!.hasException) {
+                    const snackBar = SnackBar(
+                      content: Text('Server Error'),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    return const Text("result.exception.toString()");
+                  }
+
+                  if (result!.isLoading) {
+                    return const CircularProgressIndicator(
                       color: Colors.black,
-                    ),
-                    child: const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Text(
-                          "-1000₹",
-                          style: TextStyle(
-                            fontSize: 45,
-                            color: Colors.white,
+                    );
+                  }
+
+                  int moneySpent = result.data!["generateMonthlyExpense"]["totalSpent"];
+                  debugPrint("Money Spent: $moneySpent");
+
+                  return Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Center(
+                      child: Container(
+                        width: 300,
+                        height: 150,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20.0),
+                            bottomRight: Radius.circular(20.0),
+                            topLeft: Radius.circular(20.0),
+                            bottomLeft: Radius.circular(20.0),
+                          ),
+                          color: Colors.black,
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: Text(
+                              "-$moneySpent₹",
+                              style: const TextStyle(
+                                fontSize: 45,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                }
               ),
               Center(
                 child: Column(
@@ -143,7 +185,11 @@ class _ExpensesPageState extends State<ExpensesPage> {
                     debugPrint(result.toString());
 
                     if (result!.hasException) {
-                      return Text(result.exception.toString());
+                      const snackBar = SnackBar(
+                        content: Text('Server Error'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      return const Text("result.exception.toString()");
                     }
 
                     if (result!.isLoading) {
@@ -155,90 +201,62 @@ class _ExpensesPageState extends State<ExpensesPage> {
                     List expenses = result!.data!['getExpensesPerMonth'];
 
                     return Padding(
-                      padding: const EdgeInsets.only(top: 16),
+                      padding: const EdgeInsets.only(top: 4),
                       child: SizedBox(
                         height: 400,
-                        child: Table(
-                            border:
-                                TableBorder.all(width: 1.0, color: Colors.black),
-                            children: [
-                              TableRow(children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: TableCell(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: const <Widget>[
-                                        Text(
-                                          "ID",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Name",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Place",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Price",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Quantity",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Total Paid",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 16,
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                        child: SingleChildScrollView(
+                          child: DataTable(
+                            columnSpacing: 20.0,
+                            columns: const [
+                              DataColumn(
+                                label: Text(
+                                  "ID",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
                                   ),
                                 ),
-                              ]),
-                              for (var expense in expenses)
-                                TableRow(children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: TableCell(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: <Widget>[
-                                          Text(expense["id"].toString()),
-                                          Text(expense["itemName"].toString()),
-                                          Text(expense["place"].toString()),
-                                          Text(expense["price"].toString()),
-                                          Text(expense["quantity"].toString()),
-                                          Text(expense["totalPaid"].toString())
-                                        ],
-                                      ),
-                                    ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  "Name",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
                                   ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  "Place",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  "Total Paid",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                            rows: [
+                              for(var expense in expenses)
+                                DataRow(cells: [
+                                  DataCell(Text(expense["id"].toString())),
+                                  DataCell(Text(expense["itemName"].toString())),
+                                  DataCell(Text(expense["place"].toString())),
+                                  DataCell(Text(expense["totalPaid"].toString())),
                                 ])
-                            ]),
-                      ),
+                            ],
+                          ),
+                        ),
+                      )
                     );
                   }),
             ],
