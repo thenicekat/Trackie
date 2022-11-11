@@ -16,7 +16,7 @@ class _AddExpenseState extends State<AddExpense> {
   bool isLoading = false;
 
   final String _addExpenseMutation = """
-  mutation AddNewExpense(\$place: String, \$itemName: String, \$price: number, \$quantity: number) {
+  mutation AddNewExpense(\$place: String!, \$itemName: String!, \$price: Float!, \$quantity: Float!) {
     addNewExpense(
         place: \$place,
         itemName: \$itemName,
@@ -113,23 +113,28 @@ class _AddExpenseState extends State<AddExpense> {
                   options: MutationOptions(
                       document: gql(_addExpenseMutation),
                       onCompleted: (dynamic data) {
-                        debugPrint("Completed sending the request");
+                        debugPrint(data.toString());
+                          if(data?["addNewExpense"] != null){
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.pop(context);
+                          }
                       }),
                   builder: (RunMutation runMutation, QueryResult? result) {
                     return ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black),
                       onPressed: () {
+                        setState(() {
+                          isLoading = true;
+                        });
                         try {
                           runMutation({
                             "place": place.text,
                             "price": int.parse(price.text),
                             "quantity": int.parse(quantity.text),
                             "itemName": itemName.text
-                          });
-                          debugPrint(result.toString());
-                          setState(() {
-                            isLoading = false;
                           });
                         } on FormatException {
                           const snackBar = SnackBar(
