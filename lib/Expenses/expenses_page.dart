@@ -48,66 +48,66 @@ class _ExpensesPageState extends State<ExpensesPage> {
         home: Scaffold(
           body: Column(
             children: [
-              Query(
-                options: QueryOptions(
-                  document: gql(_generateMonthlyAnalysisQuery),
-                  variables: {
-                    "month": monthDropDownValue,
-                    "year": yearDropDownValue
-                  }
-                ),
-                builder: (QueryResult? result,
-                    {VoidCallback? refetch, FetchMore? fetchMore}) {
-                  debugPrint(result.toString());
-
-                  if (result!.hasException) {
-                    const snackBar = SnackBar(
-                      content: Text('Server Error'),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    return const Text("result.exception.toString()");
-                  }
-
-                  if (result!.isLoading) {
-                    return const CircularProgressIndicator(
-                      color: Colors.black,
-                    );
-                  }
-
-                  int moneySpent = result.data!["generateMonthlyExpense"]["totalSpent"];
-                  debugPrint("Money Spent: $moneySpent");
-
-                  return Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Center(
-                      child: Container(
-                        width: 300,
-                        height: 150,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20.0),
-                            bottomRight: Radius.circular(20.0),
-                            topLeft: Radius.circular(20.0),
-                            bottomLeft: Radius.circular(20.0),
-                          ),
-                          color: Colors.black,
-                        ),
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(12.0),
-                            child: Text(
-                              "-$moneySpent₹",
-                              style: const TextStyle(
-                                fontSize: 45,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Center(
+                  child: Container(
+                    width: 300,
+                    height: 150,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20.0),
+                        bottomRight: Radius.circular(20.0),
+                        topLeft: Radius.circular(20.0),
+                        bottomLeft: Radius.circular(20.0),
                       ),
+                      color: Colors.black,
                     ),
-                  );
-                }
+                    child: Center(
+                      child: Query(
+                          options: QueryOptions(
+                              document: gql(_generateMonthlyAnalysisQuery),
+                              variables: {
+                                "month": monthDropDownValue,
+                                "year": yearDropDownValue
+                              }),
+                          builder: (QueryResult? result,
+                              {VoidCallback? refetch, FetchMore? fetchMore}) {
+                            debugPrint(result.toString());
+
+                            if (result!.hasException) {
+                              const snackBar = SnackBar(
+                                content: Text('Server Error'),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                              return const Text("result.exception.toString()");
+                            }
+
+                            if (result!.isLoading) {
+                              return const CircularProgressIndicator(
+                                color: Colors.white,
+                              );
+                            }
+
+                            int moneySpent = result
+                                .data!["generateMonthlyExpense"]["totalSpent"];
+                            debugPrint("Money Spent: $moneySpent");
+
+                            return Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(
+                                "-$moneySpent₹",
+                                style: const TextStyle(
+                                  fontSize: 45,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                          }),
+                    ),
+                  ),
+                ),
               ),
               Center(
                 child: Column(
@@ -201,63 +201,64 @@ class _ExpensesPageState extends State<ExpensesPage> {
                     List expenses = result!.data!['getExpensesPerMonth'];
 
                     return Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: SizedBox(
-                        height: 400,
-                        child: SingleChildScrollView(
-                          child: DataTable(
-                            columnSpacing: 20.0,
-                            columns: const [
-                              DataColumn(
-                                label: Text(
-                                  "ID",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 16,
+                        padding: const EdgeInsets.only(top: 4),
+                        child: SizedBox(
+                          height: 400,
+                          child: SingleChildScrollView(
+                            child: DataTable(
+                              columnSpacing: 20.0,
+                              columns: const [
+                                DataColumn(
+                                  label: Text(
+                                    "ID",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  "Name",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 16,
+                                DataColumn(
+                                  label: Text(
+                                    "Name",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  "Place",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 16,
+                                DataColumn(
+                                  label: Text(
+                                    "Place",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  "Total Paid",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 16,
+                                DataColumn(
+                                  label: Text(
+                                    "Total Paid",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                            rows: [
-                              for(var expense in expenses)
-                                DataRow(cells: [
-                                  DataCell(Text(expense["id"].toString())),
-                                  DataCell(Text(expense["itemName"].toString())),
-                                  DataCell(Text(expense["place"].toString())),
-                                  DataCell(Text(expense["totalPaid"].toString())),
-                                ])
-                            ],
+                              ],
+                              rows: [
+                                for (var expense in expenses)
+                                  DataRow(cells: [
+                                    DataCell(Text(expense["id"].toString())),
+                                    DataCell(
+                                        Text(expense["itemName"].toString())),
+                                    DataCell(Text(expense["place"].toString())),
+                                    DataCell(
+                                        Text(expense["totalPaid"].toString())),
+                                  ])
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    );
+                        ));
                   }),
             ],
           ),

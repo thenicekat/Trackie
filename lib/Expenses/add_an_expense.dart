@@ -16,19 +16,16 @@ class _AddExpenseState extends State<AddExpense> {
   bool isLoading = false;
 
   final String _addExpenseMutation = """
-  mutation AddNewExpense(\$place: String!, \$itemName: String!, \$price: Float!, \$quantity: Float!) {
+  mutation AddNewExpense(\$place: String!, \$itemName: String!, \$totalPaid: Float!) {
     addNewExpense(
         place: \$place,
         itemName: \$itemName,
-        price: \$price,
-        quantity: \$quantity
+        totalPaid: \$totalPaid
     ) {
         id,
         date,
         place,
         itemName,
-        price,
-        quantity,
         totalPaid
     }
 }""";
@@ -71,38 +68,12 @@ class _AddExpenseState extends State<AddExpense> {
                 controller: price,
                 decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.currency_rupee),
-                  labelText: "Price",
-                  hintText: "Price per Item",
+                  labelText: "Total Money Spent",
+                  hintText: "How much did you Spend?",
                   hintStyle:
                       TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
                   labelStyle: TextStyle(fontSize: 13, color: Colors.black),
                 )),
-
-            Container(height: 20), //space between text field
-
-            TextField(
-                controller: quantity,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.numbers),
-                  labelText: "Quantity",
-                  hintText: "How many did you buy?",
-                  hintStyle:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
-                  labelStyle: TextStyle(fontSize: 13, color: Colors.black),
-                )),
-
-            Container(height: 20), //space between text field
-
-            TextField(
-              controller: itemName,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.abc_outlined),
-                labelText: "Name",
-                hintText: "What did you buy?",
-                hintStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
-                labelStyle: TextStyle(fontSize: 13, color: Colors.black),
-              ),
-            ),
 
             Container(height: 30),
 
@@ -132,9 +103,7 @@ class _AddExpenseState extends State<AddExpense> {
                         try {
                           runMutation({
                             "place": place.text,
-                            "price": int.parse(price.text),
-                            "quantity": int.parse(quantity.text),
-                            "itemName": itemName.text
+                            "totalPaid": int.parse(price.text),
                           });
                         } on FormatException {
                           const snackBar = SnackBar(
