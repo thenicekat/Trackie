@@ -28,7 +28,7 @@ class _AddExpenseState extends State<AddExpense> {
         itemName,
         totalPaid
     }
-}""";
+  }""";
 
   @override
   void initState() {
@@ -65,6 +65,19 @@ class _AddExpenseState extends State<AddExpense> {
             Container(height: 20), //space between text field
 
             TextField(
+                controller: itemName,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.abc_rounded),
+                  labelText: "Item Name",
+                  hintText: "What did you buy?",
+                  hintStyle:
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
+                  labelStyle: TextStyle(fontSize: 13, color: Colors.black),
+                )),
+
+            Container(height: 30),
+
+            TextField(
                 controller: price,
                 decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.currency_rupee),
@@ -83,14 +96,20 @@ class _AddExpenseState extends State<AddExpense> {
               child: Mutation(
                   options: MutationOptions(
                       document: gql(_addExpenseMutation),
+                      fetchPolicy: FetchPolicy.networkOnly,
                       onCompleted: (dynamic data) {
                         debugPrint(data.toString());
-                          if(data?["addNewExpense"] != null){
-                            setState(() {
-                              isLoading = false;
-                            });
-                            Navigator.pop(context);
-                          }
+                        if (data?["addNewExpense"] != null) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                          if (data?["addNewExpense"]["itemName"] ==
+                                  itemName.text &&
+                              data?["addNewExpense"]["place"] == place.text &&
+                              data?["addNewExpense"]["totalPaid"] ==
+                                  int.parse(price.text))
+                            Navigator.pop(context, data != null);
+                        }
                       }),
                   builder: (RunMutation runMutation, QueryResult? result) {
                     return ElevatedButton(
@@ -103,6 +122,7 @@ class _AddExpenseState extends State<AddExpense> {
                         try {
                           runMutation({
                             "place": place.text,
+                            "itemName": itemName.text,
                             "totalPaid": int.parse(price.text),
                           });
                         } on FormatException {
