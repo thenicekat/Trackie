@@ -30,6 +30,7 @@ class _AddASubjectState extends State<AddASubject> {
   TextEditingController finalGrade = TextEditingController();
 
   bool isLoading = false;
+  bool isLoadingDelete = false;
 
   final String _addSubjectMutation = """
   mutation AddNewSubject(\$dept: String!, \$code: String!, \$credits: Float!, \$sem: String!, \$midsemGrade: Float!, \$finalGrade: Float!) {
@@ -49,6 +50,11 @@ class _AddASubjectState extends State<AddASubject> {
         midsemGrade,
         finalGrade
     }
+  }""";
+
+  final String _deleteSubjectMutation = """
+  mutation DeleteSubject(\$dept: String!, \$code: String!){
+    deleteSubject(dept: \$dept, code: \$code)
   }""";
 
   @override
@@ -178,7 +184,6 @@ class _AddASubjectState extends State<AddASubject> {
                 child: Mutation(
                     options: MutationOptions(
                         document: gql(_addSubjectMutation),
-                        fetchPolicy: FetchPolicy.networkOnly,
                         onCompleted: (dynamic data) {
                           debugPrint(data.toString());
                           if (data?["addNewSubject"] != null) {
@@ -224,6 +229,73 @@ class _AddASubjectState extends State<AddASubject> {
                             : const Text('Submit'),
                       );
                     }),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: 130,
+                  height: 50,
+                  child: Mutation(
+                      options: MutationOptions(
+                          document: gql(_deleteSubjectMutation),
+                          fetchPolicy: FetchPolicy.networkOnly,
+                          onCompleted: (dynamic data) {
+                            debugPrint(data.toString());
+                            if (data?["deleteSubject"] != null) {
+                              setState(() {
+                                isLoadingDelete = false;
+                              });
+
+                              if(data?["deleteSubject"] == true){
+                                const snackBar = SnackBar(
+                                  content: Text('Deleted Successfully'),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }else{
+                                const snackBar = SnackBar(
+                                  content: Text('An error occured while deleting'),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
+
+                              Navigator.pop(context, data != null);
+                            }
+                          }),
+                      builder: (RunMutation runMutation, QueryResult? result) {
+                        return OutlinedButton(
+                          style: OutlinedButton.styleFrom(),
+                          onPressed: () {
+                            setState(() {
+                              isLoadingDelete = true;
+                            });
+                            try {
+                              runMutation({
+                                "dept": dept.text,
+                                "code": code.text,
+                              });
+                            } on FormatException {
+                              const snackBar = SnackBar(
+                                content: Text('Fill in all the fields'),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            }
+                          },
+                          child: isLoadingDelete
+                              ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                CircularProgressIndicator(
+                                  color: Colors.black,
+                                ),
+                              ])
+                              : const Text('Delete'),
+                        );
+                      }),
+                ),
               )
             ],
           ),

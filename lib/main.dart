@@ -10,7 +10,7 @@ import 'package:trackie/Academics/academic_page.dart';
 import 'package:trackie/Expenses/expenses_page.dart';
 
 void main() {
-  final HttpLink httpLink = HttpLink("http://10.0.2.2:5000/graphql");
+  final HttpLink httpLink = HttpLink("https://trackie-api-production.up.railway.app/graphql");
 
   ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(

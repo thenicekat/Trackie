@@ -92,8 +92,9 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                 );
                               }
 
-                              int moneySpent = result
-                                  .data!["generateMonthlyExpense"]["totalSpent"];
+                              int moneySpent =
+                                  result.data!["generateMonthlyExpense"]
+                                      ["totalSpent"];
                               debugPrint("Money Spent: $moneySpent");
 
                               return Padding(
@@ -129,7 +130,8 @@ class _ExpensesPageState extends State<ExpensesPage> {
                               height: 2,
                               color: Colors.black,
                             ),
-                            items: month.map<DropdownMenuItem<int>>((int value) {
+                            items:
+                                month.map<DropdownMenuItem<int>>((int value) {
                               return DropdownMenuItem<int>(
                                 value: value,
                                 child: Text(value.toString()),
@@ -178,12 +180,13 @@ class _ExpensesPageState extends State<ExpensesPage> {
                 FittedBox(
                   child: Query(
                       options: QueryOptions(
-                          document: gql(_getMonthlyExpensesQuery),
-                          fetchPolicy: FetchPolicy.networkOnly,
-                          variables: {
-                            'month': monthDropDownValue,
-                            'year': yearDropDownValue
-                          }),
+                        document: gql(_getMonthlyExpensesQuery),
+                        fetchPolicy: FetchPolicy.networkOnly,
+                        variables: {
+                          'month': monthDropDownValue,
+                          'year': yearDropDownValue
+                        },
+                      ),
                       builder: (QueryResult? result,
                           {VoidCallback? refetch, FetchMore? fetchMore}) {
                         debugPrint(result.toString());
@@ -251,12 +254,14 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                   rows: [
                                     for (var expense in expenses)
                                       DataRow(cells: [
-                                        DataCell(Text(expense["id"].toString())),
                                         DataCell(
-                                            Text(expense["itemName"].toString())),
-                                        DataCell(Text(expense["place"].toString())),
+                                            Text(expense["id"].toString())),
+                                        DataCell(Text(
+                                            expense["itemName"].toString())),
                                         DataCell(
-                                            Text(expense["totalPaid"].toString())),
+                                            Text(expense["place"].toString())),
+                                        DataCell(Text(
+                                            expense["totalPaid"].toString())),
                                       ])
                                   ],
                                 ),
@@ -276,10 +281,8 @@ class _ExpensesPageState extends State<ExpensesPage> {
                 }),
               );
 
-              if(addExpenseBool){
-                setState(() {
-
-                });
+              if (addExpenseBool) {
+                setState(() {});
               }
             },
             child: const Icon(Icons.add),

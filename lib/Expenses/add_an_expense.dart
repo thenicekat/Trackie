@@ -96,7 +96,6 @@ class _AddExpenseState extends State<AddExpense> {
               child: Mutation(
                   options: MutationOptions(
                       document: gql(_addExpenseMutation),
-                      fetchPolicy: FetchPolicy.networkOnly,
                       onCompleted: (dynamic data) {
                         debugPrint(data.toString());
                         if (data?["addNewExpense"] != null) {

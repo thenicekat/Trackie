@@ -63,7 +63,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
     "4-2"
   ];
 
-  void _showSnackBar(String message){
+  void _showSnackBar(String message) {
     var snackBar = const SnackBar(
       content: Text("Server Error"),
     );
@@ -97,52 +97,53 @@ class _AcademicsPageState extends State<AcademicsPage> {
                     vertical: 40,
                   ),
                   child: Query(
-                    options: QueryOptions(
-                      document: gql(_getSGPA),
-                      variables: {
-                        "sem": semDropDownValue
-                      },
-                      fetchPolicy: FetchPolicy.networkOnly
-                    ),
-                    builder: (QueryResult? result,
-                        {VoidCallback? refetch, FetchMore? fetchMore}) {
+                      options: QueryOptions(
+                        document: gql(_getSGPA),
+                        variables: {"sem": semDropDownValue},
+                        fetchPolicy: FetchPolicy.networkOnly,
+                      ),
+                      builder: (QueryResult? result,
+                          {VoidCallback? refetch, FetchMore? fetchMore}) {
+                        debugPrint(result.toString());
 
-                      debugPrint(result.toString());
+                        if (result!.hasException) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) =>
+                              _showSnackBar(result.exception.toString()));
+                          return const Text("");
+                        }
 
-                      if (result!.hasException) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) => _showSnackBar(result.exception.toString()));
-                        return const Text("");
-                      }
+                        if (result!.isLoading) {
+                          return const CircularProgressIndicator(
+                            color: Colors.black,
+                          );
+                        }
 
-                      if (result!.isLoading) {
-                        return const CircularProgressIndicator(
-                          color: Colors.black,
+                        double sgpa = double.parse((result.data?["getSGPA"]
+                                ["finalSG"])
+                            .toStringAsFixed(2));
+                        double midsgpa = double.parse((result.data?["getSGPA"]
+                                ["midsemSG"])
+                            .toStringAsFixed(2));
+
+                        return Column(
+                          children: [
+                            Text(
+                              'SGPA: $sgpa',
+                              style: const TextStyle(
+                                fontSize: 40,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'Midsem SGPA: $midsgpa',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
                         );
-                      }
-
-                      double sgpa = double.parse((result.data?["getSGPA"]["finalSG"]).toStringAsFixed(2));
-                      double midsgpa = double.parse((result.data?["getSGPA"]["midsemSG"]).toStringAsFixed(2));
-
-                      return Column(
-                        children: [
-                          Text(
-                            'SGPA: $sgpa',
-                            style: const TextStyle(
-                              fontSize: 40,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            'Midsem SGPA: $midsgpa',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          )
-                        ],
-                      );
-                    }
-                  ),
+                      }),
                 ),
               ),
             ),
@@ -161,7 +162,10 @@ class _AcademicsPageState extends State<AcademicsPage> {
             DropdownButton<String>(
               value: semDropDownValue,
               elevation: 16,
-              style: const TextStyle(color: Colors.black, fontSize: 30),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 30,
+              ),
               underline: Container(
                 height: 2,
                 color: Colors.black,
@@ -183,8 +187,10 @@ class _AcademicsPageState extends State<AcademicsPage> {
         ),
         Query(
           options: QueryOptions(
-              document: gql(_getSubjectsPerSem),
-              variables: {"sem": semDropDownValue}),
+            document: gql(_getSubjectsPerSem),
+            fetchPolicy: FetchPolicy.networkOnly,
+            variables: {"sem": semDropDownValue},
+          ),
           builder: ((result, {fetchMore, refetch}) {
             debugPrint(result.toString());
 
@@ -198,7 +204,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
 
             if (result!.isLoading) {
               return const CircularProgressIndicator(
-                color: Colors.white,
+                color: Colors.black,
               );
             }
 
