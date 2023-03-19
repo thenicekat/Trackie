@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackie/Academics/add_a_subject.dart';
+import '../constants.dart' as constants;
 
 class AcademicsPage extends StatefulWidget {
   const AcademicsPage({Key? key}) : super(key: key);
@@ -100,7 +101,7 @@ class _AcademicsPageState extends State<AcademicsPage> {
                       options: QueryOptions(
                         document: gql(_getSGPA),
                         variables: {"sem": semDropDownValue},
-                        fetchPolicy: FetchPolicy.networkOnly,
+                        fetchPolicy: FetchPolicy.cacheAndNetwork,
                       ),
                       builder: (QueryResult? result,
                           {VoidCallback? refetch, FetchMore? fetchMore}) {
@@ -188,8 +189,8 @@ class _AcademicsPageState extends State<AcademicsPage> {
         Query(
           options: QueryOptions(
             document: gql(_getSubjectsPerSem),
-            fetchPolicy: FetchPolicy.networkOnly,
             variables: {"sem": semDropDownValue},
+            fetchPolicy: FetchPolicy.cacheAndNetwork,
           ),
           builder: ((result, {fetchMore, refetch}) {
             debugPrint(result.toString());

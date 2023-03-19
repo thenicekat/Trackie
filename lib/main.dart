@@ -2,15 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:trackie/Academics/academic_page.dart';
 import 'package:trackie/Expenses/expenses_page.dart';
+import 'constants.dart' as Constants;
 
 void main() {
-  final HttpLink httpLink = HttpLink("https://trackie-api-production.up.railway.app/graphql");
+  final HttpLink httpLink =
+      HttpLink("https://trackie-api-production.up.railway.app/graphql");
 
   ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(
@@ -45,38 +45,71 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return GraphQLProvider(
-      client: widget.client,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-        ),
-        home: Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.only(right: 16, left: 16, top: 50, bottom: 0),
-            child: pages[currentIndex],
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(
-                label: 'Academics',
-                icon: Icon(Icons.book),
+    return Constants.shouldUseGraphQL
+        ? GraphQLProvider(
+            client: widget.client,
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                primarySwatch: Colors.blueGrey,
               ),
-              BottomNavigationBarItem(
-                label: 'Expenses',
-                icon: Icon(Icons.money),
+              home: Scaffold(
+                body: Padding(
+                  padding: const EdgeInsets.only(
+                      right: 16, left: 16, top: 50, bottom: 0),
+                  child: pages[currentIndex],
+                ),
+                bottomNavigationBar: BottomNavigationBar(
+                  items: const [
+                    BottomNavigationBarItem(
+                      label: 'Academics',
+                      icon: Icon(Icons.book),
+                    ),
+                    BottomNavigationBarItem(
+                      label: 'Expenses',
+                      icon: Icon(Icons.money),
+                    ),
+                  ],
+                  currentIndex: currentIndex,
+                  onTap: (int index) {
+                    setState(() {
+                      currentIndex = index;
+                    });
+                  },
+                ),
               ),
-            ],
-            currentIndex: currentIndex,
-            onTap: (int index) {
-              setState(() {
-                currentIndex = index;
-              });
-            },
-          ),
-        ),
-      ),
-    );
+            ),
+          )
+        : MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              primarySwatch: Colors.blueGrey,
+            ),
+            home: Scaffold(
+              body: Padding(
+                padding: const EdgeInsets.only(
+                    right: 16, left: 16, top: 50, bottom: 0),
+                child: pages[currentIndex],
+              ),
+              bottomNavigationBar: BottomNavigationBar(
+                items: const [
+                  BottomNavigationBarItem(
+                    label: 'Academics',
+                    icon: Icon(Icons.book),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Expenses',
+                    icon: Icon(Icons.money),
+                  ),
+                ],
+                currentIndex: currentIndex,
+                onTap: (int index) {
+                  setState(() {
+                    currentIndex = index;
+                  });
+                },
+              ),
+            ),
+          );
   }
 }
