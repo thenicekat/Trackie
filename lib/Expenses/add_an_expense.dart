@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:trackie/Models/ExpenseModel.dart';
+import 'package:trackie/Providers/ExpenseProvider.dart';
 
 class AddExpense extends StatefulWidget {
   const AddExpense({Key? key}) : super(key: key);
@@ -14,21 +16,7 @@ class _AddExpenseState extends State<AddExpense> {
   TextEditingController quantity = TextEditingController();
   TextEditingController itemName = TextEditingController();
   bool isLoading = false;
-
-  final String _addExpenseMutation = """
-  mutation AddNewExpense(\$place: String!, \$itemName: String!, \$totalPaid: Float!) {
-    addNewExpense(
-        place: \$place,
-        itemName: \$itemName,
-        totalPaid: \$totalPaid
-    ) {
-        id,
-        date,
-        place,
-        itemName,
-        totalPaid
-    }
-  }""";
+  late ExpenseProvider _expenseProvider;
 
   @override
   void initState() {
@@ -37,6 +25,10 @@ class _AddExpenseState extends State<AddExpense> {
     quantity.text = "";
     itemName.text = "";
     super.initState();
+    this._expenseProvider = ExpenseProvider();
+    this._expenseProvider.initializeDB().whenComplete(() async {
+      setState(() {});
+    });
   }
 
   @override
@@ -93,55 +85,36 @@ class _AddExpenseState extends State<AddExpense> {
             SizedBox(
               width: 130,
               height: 50,
-              child: Mutation(
-                  options: MutationOptions(
-                      document: gql(_addExpenseMutation),
-                      onCompleted: (dynamic data) {
-                        debugPrint(data.toString());
-                        if (data?["addNewExpense"] != null) {
-                          setState(() {
-                            isLoading = false;
-                          });
-                          if (data?["addNewExpense"]["itemName"] ==
-                                  itemName.text &&
-                              data?["addNewExpense"]["place"] == place.text &&
-                              data?["addNewExpense"]["totalPaid"] ==
-                                  int.parse(price.text))
-                            Navigator.pop(context, data != null);
-                        }
-                      }),
-                  builder: (RunMutation runMutation, QueryResult? result) {
-                    return ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black),
-                      onPressed: () {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        try {
-                          runMutation({
-                            "place": place.text,
-                            "itemName": itemName.text,
-                            "totalPaid": int.parse(price.text),
-                          });
-                        } on FormatException {
-                          const snackBar = SnackBar(
-                            content: Text('Fill in all the fields'),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
-                      },
-                      child: isLoading
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                  CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                ])
-                          : const Text('Submit'),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+                onPressed: () async {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  try {
+                    ExpenseModel expenseModel = ExpenseModel(place: place.text, itemName: itemName.text, moneySpent: int.parse(price.text));
+                    int result = await _expenseProvider.addExpense(expenseModel);
+                    setState(() {
+                      isLoading = false;
+                    });
+                    Navigator.pop(context, result != null);
+                  } on FormatException {
+                    const snackBar = SnackBar(
+                      content: Text('Fill in all the fields'),
                     );
-                  }),
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
+                child: isLoading
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                            CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ])
+                    : const Text('Submit'),
+              ),
             )
           ],
         ),
