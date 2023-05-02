@@ -44,136 +44,139 @@ class _ExpensesPageState extends State<ExpensesPage> {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(primarySwatch: Colors.blueGrey),
         home: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: SizedBox(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Center(
-                    child: Container(
-                      width: 300,
-                      height: 150,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(20.0),
-                          bottomRight: Radius.circular(20.0),
-                          topLeft: Radius.circular(20.0),
-                          bottomLeft: Radius.circular(20.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Center(
+                      child: Container(
+                        width: 300,
+                        height: 150,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20.0),
+                            bottomRight: Radius.circular(20.0),
+                            topLeft: Radius.circular(20.0),
+                            bottomLeft: Radius.circular(20.0),
+                          ),
+                          color: Colors.black,
                         ),
-                        color: Colors.black,
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: isLoading
-                              ? CircularProgressIndicator(
-                                  color: Colors.white,
-                                )
-                              : Text(
-                                  "-$totalSpent₹",
-                                  style: const TextStyle(
-                                    fontSize: 45,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: isLoading
+                                ? CircularProgressIndicator(
                                     color: Colors.white,
+                                  )
+                                : Text(
+                                    "-$totalSpent₹",
+                                    style: const TextStyle(
+                                      fontSize: 45,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                FittedBox(
-                  child: Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: SizedBox(
-                        height: 400,
-                        child: SingleChildScrollView(
-                          child: DataTable(
-                            showCheckboxColumn: false,
-                            columns: const [
-                              DataColumn(
-                                label: Text(
-                                  "ID",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 20,
+                  FittedBox(
+                    child: Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: SizedBox(
+                          height: 400,
+                          child: SingleChildScrollView(
+                            child: DataTable(
+                              showCheckboxColumn: false,
+                              columns: const [
+                                DataColumn(
+                                  label: Text(
+                                    "ID",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  "Name",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 20,
+                                DataColumn(
+                                  label: Text(
+                                    "Name",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  "Place",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 20,
+                                DataColumn(
+                                  label: Text(
+                                    "Place",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  "Total Paid",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 20,
+                                DataColumn(
+                                  label: Text(
+                                    "Total Paid",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                            rows: [
-                              for (var expense in _expenses)
-                                DataRow(
-                                    cells: [
-                                      DataCell(Text(
-                                        expense.id.toString(),
-                                        style: const TextStyle(fontSize: 20),
-                                      )),
-                                      DataCell(Text(
-                                        expense.itemName.toString(),
-                                        style: const TextStyle(fontSize: 20),
-                                      )),
-                                      DataCell(Text(
-                                        expense.place.toString(),
-                                        style: const TextStyle(fontSize: 20),
-                                      )),
-                                      DataCell(Text(
-                                        expense.moneySpent.toString(),
-                                        style: const TextStyle(fontSize: 20),
-                                      )),
-                                    ],
-                                    onSelectChanged: (value) async {
-                                      final addExpenseBool =
-                                          await Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                          return AddExpense.withData(
-                                            id: expense.id as int,
-                                            itemName: expense.itemName,
-                                            place: expense.place,
-                                            moneySpent:
-                                                expense.moneySpent.toString(),
-                                          );
-                                        }),
-                                      );
+                              ],
+                              rows: [
+                                for (var expense in _expenses)
+                                  DataRow(
+                                      cells: [
+                                        DataCell(Text(
+                                          expense.id.toString(),
+                                          style: const TextStyle(fontSize: 20),
+                                        )),
+                                        DataCell(Text(
+                                          expense.itemName.toString(),
+                                          style: const TextStyle(fontSize: 20),
+                                        )),
+                                        DataCell(Text(
+                                          expense.place.toString(),
+                                          style: const TextStyle(fontSize: 20),
+                                        )),
+                                        DataCell(Text(
+                                          expense.moneySpent.toString(),
+                                          style: const TextStyle(fontSize: 20),
+                                        )),
+                                      ],
+                                      onSelectChanged: (value) async {
+                                        final addExpenseBool =
+                                            await Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) {
+                                            return AddExpense.withData(
+                                              id: expense.id as int,
+                                              itemName: expense.itemName,
+                                              place: expense.place,
+                                              moneySpent:
+                                                  expense.moneySpent.toString(),
+                                            );
+                                          }),
+                                        );
 
-                                      if (addExpenseBool) {
-                                        _refreshExpenses();
-                                        setState(() {});
-                                      }
-                                    })
-                            ],
+                                        if (addExpenseBool) {
+                                          _refreshExpenses();
+                                          setState(() {});
+                                        }
+                                      })
+                              ],
+                            ),
                           ),
-                        ),
-                      )),
-                ),
-              ],
+                        )),
+                  ),
+                ],
+              ),
             ),
           ),
           floatingActionButton: FloatingActionButton(
