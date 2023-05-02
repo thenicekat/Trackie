@@ -65,15 +65,17 @@ class _ExpensesPageState extends State<ExpensesPage> {
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: isLoading ? CircularProgressIndicator(
-                            color: Colors.white,
-                          ) : Text(
-                            "-$totalSpent₹",
-                            style: const TextStyle(
-                              fontSize: 45,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: isLoading
+                              ? CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : Text(
+                                  "-$totalSpent₹",
+                                  style: const TextStyle(
+                                    fontSize: 45,
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                       ),
                     ),
@@ -86,13 +88,14 @@ class _ExpensesPageState extends State<ExpensesPage> {
                         height: 400,
                         child: SingleChildScrollView(
                           child: DataTable(
+                            showCheckboxColumn: false,
                             columns: const [
                               DataColumn(
                                 label: Text(
                                   "ID",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w800,
-                                    fontSize: 16,
+                                    fontSize: 20,
                                   ),
                                 ),
                               ),
@@ -101,7 +104,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                   "Name",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w800,
-                                    fontSize: 16,
+                                    fontSize: 20,
                                   ),
                                 ),
                               ),
@@ -110,7 +113,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                   "Place",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w800,
-                                    fontSize: 16,
+                                    fontSize: 20,
                                   ),
                                 ),
                               ),
@@ -119,21 +122,52 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                   "Total Paid",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w800,
-                                    fontSize: 16,
+                                    fontSize: 20,
                                   ),
                                 ),
                               ),
                             ],
                             rows: [
                               for (var expense in _expenses)
-                                DataRow(cells: [
-                                  DataCell(Text(expense.id.toString())),
-                                  DataCell(
-                                      Text(expense.itemName.toString())),
-                                  DataCell(Text(expense.place.toString())),
-                                  DataCell(
-                                      Text(expense.moneySpent.toString())),
-                                ])
+                                DataRow(
+                                    cells: [
+                                      DataCell(Text(
+                                        expense.id.toString(),
+                                        style: const TextStyle(fontSize: 20),
+                                      )),
+                                      DataCell(Text(
+                                        expense.itemName.toString(),
+                                        style: const TextStyle(fontSize: 20),
+                                      )),
+                                      DataCell(Text(
+                                        expense.place.toString(),
+                                        style: const TextStyle(fontSize: 20),
+                                      )),
+                                      DataCell(Text(
+                                        expense.moneySpent.toString(),
+                                        style: const TextStyle(fontSize: 20),
+                                      )),
+                                    ],
+                                    onSelectChanged: (value) async {
+                                      final addExpenseBool =
+                                          await Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                          return AddExpense.withData(
+                                            id: expense.id as int,
+                                            itemName: expense.itemName,
+                                            place: expense.place,
+                                            moneySpent:
+                                                expense.moneySpent.toString(),
+                                          );
+                                        }),
+                                      );
+
+                                      if (addExpenseBool) {
+                                        _refreshExpenses();
+                                        setState(() {});
+                                      }
+                                    })
                             ],
                           ),
                         ),
@@ -147,7 +181,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
             onPressed: () async {
               final addExpenseBool = await Navigator.of(context).push(
                 MaterialPageRoute(builder: (BuildContext context) {
-                  return const AddExpense();
+                  return AddExpense();
                 }),
               );
 

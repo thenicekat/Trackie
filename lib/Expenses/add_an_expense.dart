@@ -4,7 +4,20 @@ import 'package:trackie/Models/ExpenseModel.dart';
 import 'package:trackie/Providers/ExpenseProvider.dart';
 
 class AddExpense extends StatefulWidget {
-  const AddExpense({Key? key}) : super(key: key);
+  AddExpense({Key? key}) : super(key: key);
+
+  int id = 0;
+  String itemName = "";
+  String place = "";
+  String moneySpent = "";
+
+  AddExpense.withData(
+      {Key? key,
+      required this.id,
+      required this.itemName,
+      required this.place,
+      required this.moneySpent})
+      : super(key: key);
 
   @override
   State<AddExpense> createState() => _AddExpenseState();
@@ -13,7 +26,6 @@ class AddExpense extends StatefulWidget {
 class _AddExpenseState extends State<AddExpense> {
   TextEditingController place = TextEditingController();
   TextEditingController price = TextEditingController();
-  TextEditingController quantity = TextEditingController();
   TextEditingController itemName = TextEditingController();
   bool isLoading = false;
   late ExpenseProvider _expenseProvider;
@@ -22,11 +34,17 @@ class _AddExpenseState extends State<AddExpense> {
   void initState() {
     place.text = "";
     price.text = "";
-    quantity.text = "";
     itemName.text = "";
+
+    if (widget.id != 0) {
+      place.text = widget.place;
+      price.text = widget.moneySpent;
+      itemName.text = widget.itemName;
+    }
+
     super.initState();
-    this._expenseProvider = ExpenseProvider();
-    this._expenseProvider.initializeDB().whenComplete(() async {
+    _expenseProvider = ExpenseProvider();
+    _expenseProvider.initializeDB().whenComplete(() async {
       setState(() {});
     });
   }
@@ -92,12 +110,29 @@ class _AddExpenseState extends State<AddExpense> {
                     isLoading = true;
                   });
                   try {
-                    ExpenseModel expenseModel = ExpenseModel(place: place.text, itemName: itemName.text, moneySpent: int.parse(price.text));
-                    int result = await _expenseProvider.addExpense(expenseModel);
-                    setState(() {
-                      isLoading = false;
-                    });
-                    Navigator.pop(context, result != null);
+                    int result;
+                    if (widget.id == 0) {
+                      ExpenseModel expenseModel = ExpenseModel(
+                          place: place.text,
+                          itemName: itemName.text,
+                          moneySpent: int.parse(price.text));
+                      result = await _expenseProvider.addExpense(expenseModel);
+                      setState(() {
+                        isLoading = false;
+                      });
+                    } else {
+                      ExpenseModel expenseModel = ExpenseModel(
+                          id: widget.id,
+                          place: place.text,
+                          itemName: itemName.text,
+                          moneySpent: int.parse(price.text));
+                      result = await _expenseProvider.addExpense(expenseModel);
+                      setState(() {
+                        isLoading = false;
+                      });
+                    }
+
+                    Navigator.pop(context, true);
                   } on FormatException {
                     const snackBar = SnackBar(
                       content: Text('Fill in all the fields'),
