@@ -28,6 +28,7 @@ class _AddExpenseState extends State<AddExpense> {
   TextEditingController price = TextEditingController();
   TextEditingController itemName = TextEditingController();
   bool isLoading = false;
+  bool isLoadingDelete = false;
   late ExpenseProvider _expenseProvider;
 
   @override
@@ -149,6 +150,48 @@ class _AddExpenseState extends State<AddExpense> {
                             ),
                           ])
                     : const Text('Submit'),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 130,
+                height: 50,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(),
+                  onPressed: () {
+                    setState(() {
+                      isLoadingDelete = true;
+                    });
+                    try {
+                      if (widget.id == 0) {}
+                      else{
+                        _expenseProvider.deleteExpense(widget.id);
+                        setState(() {
+                          isLoadingDelete = false;
+                        });
+                      }
+
+                      Navigator.pop(context, true);
+                    } on FormatException {
+                      const snackBar = SnackBar(
+                        content: Text('Fill in all the fields'),
+                      );
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(snackBar);
+                    }
+                  },
+                  child: isLoadingDelete
+                      ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        CircularProgressIndicator(
+                          color: Colors.black,
+                        ),
+                      ])
+                      : const Text('Delete'),
+                ),
               ),
             )
           ],

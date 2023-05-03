@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:trackie/Expenses/expenses_page.dart';
+import 'package:trackie/Academics/academics_page.dart';
 
 void main() async {
   // Avoid errors caused by flutter upgrade.
@@ -28,6 +29,7 @@ class _MyAppState extends State<MyApp> {
   //Make a list of widgets
   List<Widget> pages = const [
     ExpensesPage(),
+    AcademicsPage(),
   ];
 
   @override

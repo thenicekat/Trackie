@@ -34,6 +34,11 @@ class ExpenseProvider{
     final List<Map> sumTotalExpense = await db.rawQuery('SELECT sum(moneySpent) FROM Expenses');
     int sum = sumTotalExpense[0]["sum(moneySpent)"] ?? 0;
     return sum;
+  }
 
+  Future<int> deleteExpense(int id) async {
+    final Database db = await initializeDB();
+    int count = await db.delete('Expenses', where: 'id = ?', whereArgs: [id]);
+    return count;
   }
 }
