@@ -90,6 +90,7 @@ class _AddExpenseState extends State<AddExpense> {
 
             TextField(
                 controller: price,
+                keyboardType: const TextInputType.numberWithOptions(),
                 decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.currency_rupee),
                   labelText: "Total Money Spent",
