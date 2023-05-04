@@ -87,7 +87,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                     child: Padding(
                         padding: const EdgeInsets.only(top: 4),
                         child: SizedBox(
-                          height: 400,
+                          height: MediaQuery.of(context).size.height * 0.6,
                           child: SingleChildScrollView(
                             child: DataTable(
                               showCheckboxColumn: false,
