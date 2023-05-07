@@ -39,6 +39,14 @@ class ExpenseProvider{
   Future<int> deleteExpense(int id) async {
     final Database db = await initializeDB();
     int count = await db.delete('Expenses', where: 'id = ?', whereArgs: [id]);
+    await db.execute('UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = "Expenses"');
     return count;
+  }
+  
+  Future<int> truncateExpenses() async {
+    final Database db = await initializeDB();
+    await db.execute('DELETE FROM Expenses');
+    await db.execute('UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = "Expenses"');
+    return 0;
   }
 }

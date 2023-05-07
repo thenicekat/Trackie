@@ -14,6 +14,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
   late ExpenseProvider _expenseProvider;
   int totalSpent = 0;
   bool isLoading = false;
+  bool isLoadingReset = false;
   List<ExpenseModel> _expenses = [];
 
   void _refreshExpenses() async {
@@ -49,12 +50,13 @@ class _ExpensesPageState extends State<ExpensesPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Center(
                       child: Container(
                         width: 300,
-                        height: 150,
+                        height: MediaQuery.of(context).size.height * 0.175,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20.0),
@@ -68,7 +70,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: isLoading
-                                ? CircularProgressIndicator(
+                                ? const CircularProgressIndicator(
                                     color: Colors.white,
                                   )
                                 : Text(
@@ -83,24 +85,16 @@ class _ExpensesPageState extends State<ExpensesPage> {
                       ),
                     ),
                   ),
+
                   FittedBox(
                     child: Padding(
                         padding: const EdgeInsets.only(top: 4),
                         child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.6,
+                          height: MediaQuery.of(context).size.height * 0.5,
                           child: SingleChildScrollView(
                             child: DataTable(
                               showCheckboxColumn: false,
                               columns: const [
-                                DataColumn(
-                                  label: Text(
-                                    "ID",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
                                 DataColumn(
                                   label: Text(
                                     "Name",
@@ -133,10 +127,6 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                 for (var expense in _expenses)
                                   DataRow(
                                       cells: [
-                                        DataCell(Text(
-                                          expense.id.toString(),
-                                          style: const TextStyle(fontSize: 20),
-                                        )),
                                         DataCell(Text(
                                           expense.itemName.toString(),
                                           style: const TextStyle(fontSize: 20),
@@ -175,6 +165,44 @@ class _ExpensesPageState extends State<ExpensesPage> {
                           ),
                         )),
                   ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 130,
+                      height: 50,
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(),
+                        onPressed: () {
+                          setState(() {
+                            isLoadingReset = true;
+                          });
+                          try {
+                            _expenseProvider.truncateExpenses();
+                            _refreshExpenses();
+                            setState(() {
+                              isLoadingReset = false;
+                            });
+                          } on FormatException {
+                            const snackBar = SnackBar(
+                              content: Text('Fill in all the fields'),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
+                        },
+                        child: isLoadingReset
+                            ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              CircularProgressIndicator(
+                                color: Colors.black,
+                              ),
+                            ])
+                            : const Text('Reset'),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
