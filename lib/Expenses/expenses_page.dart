@@ -22,7 +22,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
     final sum = await _expenseProvider.getTotalSpent();
     setState(() {
       _expenses = data;
-      totalSpent = sum;
+      totalSpent = -sum;
       isLoading = false;
     });
   }
@@ -74,7 +74,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                     color: Colors.white,
                                   )
                                 : Text(
-                                    "-$totalSpent₹",
+                                    "$totalSpent₹",
                                     style: const TextStyle(
                                       fontSize: 45,
                                       color: Colors.white,

@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:trackie/Expenses/analytics.dart';
 import 'package:trackie/Expenses/expenses_page.dart';
-import 'package:trackie/Academics/academics_page.dart';
 
 void main() async {
   // Avoid errors caused by flutter upgrade.
@@ -15,7 +15,6 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -29,7 +28,7 @@ class _MyAppState extends State<MyApp> {
   //Make a list of widgets
   List<Widget> pages = const [
     ExpensesPage(),
-    AcademicsPage(),
+    ExpenseAnalytics()
   ];
 
   @override
@@ -52,8 +51,8 @@ class _MyAppState extends State<MyApp> {
                     icon: Icon(Icons.money),
                   ),
                   BottomNavigationBarItem(
-                    label: 'Academics',
-                    icon: Icon(Icons.book),
+                    label: 'Analytics',
+                    icon: Icon(Icons.insert_chart),
                   ),
                 ],
                 currentIndex: currentIndex,
