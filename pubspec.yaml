@@ -39,6 +39,7 @@ dependencies:
   graphql_flutter: ^5.1.0
   shared_preferences: ^2.0.15
   sqflite: ^2.2.2
+  fl_chart: ^0.62.0
 
 dev_dependencies:
   icons_launcher: ^2.0.5

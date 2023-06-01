@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:flutter/material.dart';
 import 'package:trackie/Models/ExpenseModel.dart';
 
 class ExpenseProvider{
@@ -27,6 +28,13 @@ class ExpenseProvider{
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('Expenses');
     return queryResult.map((e) => ExpenseModel.fromMap(e)).toList();
+  }
+
+  Future<List<ExpenseModel>> retrieveExpenseAnalytics() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('SELECT place, sum(moneySpent) FROM Expenses GROUP BY place ORDER BY sum(moneySpent) DESC');
+    debugPrint(queryResult.toString());
+    return queryResult.map((e) => ExpenseModel.fromMapWithoutPlace(e)).toList();
   }
 
   Future<int> getTotalSpent() async {

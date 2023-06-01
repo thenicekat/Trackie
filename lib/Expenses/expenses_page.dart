@@ -147,7 +147,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                               builder: (BuildContext context) {
                                             return AddExpense.withData(
                                               id: expense.id as int,
-                                              itemName: expense.itemName,
+                                              itemName: expense.itemName as String,
                                               place: expense.place,
                                               moneySpent:
                                                   expense.moneySpent.toString(),
