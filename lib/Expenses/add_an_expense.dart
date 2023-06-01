@@ -115,8 +115,8 @@ class _AddExpenseState extends State<AddExpense> {
                     int result;
                     if (widget.id == 0) {
                       ExpenseModel expenseModel = ExpenseModel(
-                          place: place.text,
-                          itemName: itemName.text,
+                          place: place.text.trim(),
+                          itemName: itemName.text.trim(),
                           moneySpent: int.parse(price.text));
                       result = await _expenseProvider.addExpense(expenseModel);
                       setState(() {
@@ -125,8 +125,8 @@ class _AddExpenseState extends State<AddExpense> {
                     } else {
                       ExpenseModel expenseModel = ExpenseModel(
                           id: widget.id,
-                          place: place.text,
-                          itemName: itemName.text,
+                          place: place.text.trim(),
+                          itemName: itemName.text.trim(),
                           moneySpent: int.parse(price.text));
                       result = await _expenseProvider.addExpense(expenseModel);
                       setState(() {
