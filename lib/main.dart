@@ -1,9 +1,6 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
-import 'package:trackie/Expenses/analytics.dart';
+import 'package:trackie/CGPA/subjects_page.dart';
+import 'package:trackie/Evaluatives/eval_page.dart';
 import 'package:trackie/Expenses/expenses_page.dart';
 
 void main() async {
@@ -28,41 +25,46 @@ class _MyAppState extends State<MyApp> {
   //Make a list of widgets
   List<Widget> pages = const [
     ExpensesPage(),
-    ExpenseAnalytics()
+    EvalPage(),
+    SubjectsPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primarySwatch: Colors.blueGrey,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
+      ),
+      home: Scaffold(
+        body: Padding(
+          padding:
+              const EdgeInsets.only(right: 16, left: 16, top: 50, bottom: 0),
+          child: pages[currentIndex],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              label: 'Expenses',
+              icon: Icon(Icons.money),
             ),
-            home: Scaffold(
-              body: Padding(
-                padding: const EdgeInsets.only(
-                    right: 16, left: 16, top: 50, bottom: 0),
-                child: pages[currentIndex],
-              ),
-              bottomNavigationBar: BottomNavigationBar(
-                items: const [
-                  BottomNavigationBarItem(
-                    label: 'Expenses',
-                    icon: Icon(Icons.money),
-                  ),
-                  BottomNavigationBarItem(
-                    label: 'Analytics',
-                    icon: Icon(Icons.insert_chart),
-                  ),
-                ],
-                currentIndex: currentIndex,
-                onTap: (int index) {
-                  setState(() {
-                    currentIndex = index;
-                  });
-                },
-              ),
+            BottomNavigationBarItem(
+              label: 'Evals',
+              icon: Icon(Icons.book),
             ),
-          );
+            BottomNavigationBarItem(
+              label: 'CGPA',
+              icon: Icon(Icons.numbers),
+            ),
+          ],
+          currentIndex: currentIndex,
+          onTap: (int index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+        ),
+      ),
+    );
   }
 }

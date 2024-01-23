@@ -50,7 +50,6 @@ class _ExpensesPageState extends State<ExpensesPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Center(
@@ -85,11 +84,11 @@ class _ExpensesPageState extends State<ExpensesPage> {
                       ),
                     ),
                   ),
-
                   FittedBox(
                     child: Padding(
                         padding: const EdgeInsets.only(top: 4),
                         child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.9,
                           height: MediaQuery.of(context).size.height * 0.5,
                           child: SingleChildScrollView(
                             child: DataTable(
@@ -97,7 +96,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                               columns: const [
                                 DataColumn(
                                   label: Text(
-                                    "Name",
+                                    "Item Name",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w800,
                                       fontSize: 20,
@@ -106,16 +105,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                 ),
                                 DataColumn(
                                   label: Text(
-                                    "Place",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Text(
-                                    "Total Paid",
+                                    "Amount",
                                     style: TextStyle(
                                       fontWeight: FontWeight.w800,
                                       fontSize: 20,
@@ -132,10 +122,6 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                           style: const TextStyle(fontSize: 20),
                                         )),
                                         DataCell(Text(
-                                          expense.place.toString(),
-                                          style: const TextStyle(fontSize: 20),
-                                        )),
-                                        DataCell(Text(
                                           expense.moneySpent.toString(),
                                           style: const TextStyle(fontSize: 20),
                                         )),
@@ -147,8 +133,8 @@ class _ExpensesPageState extends State<ExpensesPage> {
                                               builder: (BuildContext context) {
                                             return AddExpense.withData(
                                               id: expense.id as int,
-                                              itemName: expense.itemName as String,
-                                              place: expense.place,
+                                              itemName:
+                                                  expense.itemName as String,
                                               moneySpent:
                                                   expense.moneySpent.toString(),
                                             );
@@ -165,7 +151,6 @@ class _ExpensesPageState extends State<ExpensesPage> {
                           ),
                         )),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
@@ -193,12 +178,12 @@ class _ExpensesPageState extends State<ExpensesPage> {
                         },
                         child: isLoadingReset
                             ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              CircularProgressIndicator(
-                                color: Colors.black,
-                              ),
-                            ])
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                    CircularProgressIndicator(
+                                      color: Colors.black,
+                                    ),
+                                  ])
                             : const Text('Reset'),
                       ),
                     ),
