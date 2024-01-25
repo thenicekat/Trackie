@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackie/CGPA/add_a_subject.dart';
 import 'package:trackie/Models/SubjectModel.dart';
-import 'package:trackie/Providers/SubjectProvider.dart';
+import 'package:trackie/Providers/DatabaseProvider.dart';
 
 class SubjectsPage extends StatefulWidget {
   const SubjectsPage({Key? key}) : super(key: key);
@@ -15,7 +15,9 @@ class _SubjectsPageState extends State<SubjectsPage> {
   String? semDropDownValue = "3-2";
   List<SubjectModel> subjects = [];
   bool isLoading = false;
-  late SubjectProvider _subjectProvider;
+  late DatabaseProvider _databaseProvider;
+  int cgpa = 0;
+  int sgpa = 0;
 
   void addSemToPref(String semester) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -31,20 +33,26 @@ class _SubjectsPageState extends State<SubjectsPage> {
   }
 
   void _refreshSubjects() async {
-    final data = await _subjectProvider.retrieveSubjects(semDropDownValue!);
+    final data = await _databaseProvider.retrieveSubjects(semDropDownValue!);
     debugPrint(semDropDownValue!);
-    debugPrint(data.toString());
     setState(() {
       subjects = data;
       isLoading = false;
+    });
+
+    final cgpaData = await _databaseProvider.findCGPA();
+    final sgpaData = await _databaseProvider.findSGPA(semDropDownValue!);
+    setState(() {
+      sgpa = sgpaData;
+      cgpa = cgpaData;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _subjectProvider = SubjectProvider();
-    _subjectProvider.initializeDB().whenComplete(() async {
+    _databaseProvider = DatabaseProvider();
+    _databaseProvider.initializeDB().whenComplete(() async {
       _refreshSubjects();
       setState(() {
         isLoading = true;
@@ -87,20 +95,18 @@ class _SubjectsPageState extends State<SubjectsPage> {
               ),
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 40,
-                  ),
+                  padding: const EdgeInsets.all(40),
                   child: Column(
                     children: [
                       Text(
-                        'SGPA: 6.9',
+                        'CGPA: $cgpa',
                         style: const TextStyle(
                           fontSize: 40,
                           color: Colors.white,
                         ),
                       ),
                       Text(
-                        'Midsem SGPA: 6.9',
+                        'SGPA: $sgpa',
                         style: const TextStyle(
                           fontSize: 20,
                           color: Colors.white,
@@ -144,6 +150,7 @@ class _SubjectsPageState extends State<SubjectsPage> {
                 setState(() {
                   semDropDownValue = chosen!;
                   addSemToPref(chosen);
+                  _refreshSubjects();
                 });
               },
             ),
@@ -154,9 +161,9 @@ class _SubjectsPageState extends State<SubjectsPage> {
             child: FittedBox(
               child: SingleChildScrollView(
                 child: isLoading
-                    ? Row(
+                    ? const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                             CircularProgressIndicator(
                               color: Colors.black,
                             ),
@@ -170,7 +177,7 @@ class _SubjectsPageState extends State<SubjectsPage> {
                                 "Subject",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 16,
+                                  fontSize: 24,
                                 ),
                               ),
                             ),
@@ -179,69 +186,68 @@ class _SubjectsPageState extends State<SubjectsPage> {
                                 "Credits",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 16,
+                                  fontSize: 24,
                                 ),
                               ),
                             ),
                             DataColumn(
                               label: Text(
-                                "Midsem Grade",
+                                "Grade",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                "Final Grade",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 16,
+                                  fontSize: 24,
                                 ),
                               ),
                             ),
                           ],
                         rows: [
-                            // for (var subject in subjects)
-                            //   DataRow(
-                            //       cells: [
-                            //         DataCell(Text(subject["dept"].toString())),
-                            //         DataCell(Text(subject["code"].toString())),
-                            //         DataCell(Text(subject["credits"].toString())),
-                            //         DataCell(
-                            //             Text(subject["midsemGrade"].toString())),
-                            //         DataCell(
-                            //             Text(subject["finalGrade"].toString())),
-                            //       ],
-                            //       onSelectChanged: (value) {
-                            //         debugPrint(subject.toString());
-                            //         Navigator.of(context).push(
-                            //           MaterialPageRoute(
-                            //               builder: (BuildContext context) {
-                            //                 return AddASubject.withData(
-                            //                   dept: subject["dept"],
-                            //                   code: subject["code"],
-                            //                   credits: subject["credits"],
-                            //                   sem: subject["sem"],
-                            //                   midsemGrade: subject["midsemGrade"],
-                            //                   finalGrade: subject["finalGrade"],
-                            //                 );
-                            //               }),
-                            //         );
-                            //       }),
+                            for (var subject in subjects)
+                              DataRow(
+                                  cells: [
+                                    DataCell(Text(
+                                      subject.subject.toString(),
+                                      style: const TextStyle(fontSize: 24),
+                                    )),
+                                    DataCell(Text(
+                                      subject.credits.toString(),
+                                      style: const TextStyle(fontSize: 24),
+                                    )),
+                                    DataCell(Text(
+                                      subject.grade.toString(),
+                                      style: const TextStyle(fontSize: 24),
+                                    )),
+                                  ],
+                                  onSelectChanged: (value) {
+                                    debugPrint(subject.toString());
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                        return AddASubject.withData(
+                                          subject: subject.subject,
+                                          credits: subject.credits,
+                                          sem: subject.sem,
+                                          grade: subject.grade,
+                                        );
+                                      }),
+                                    );
+                                  }),
                           ]),
               ),
             ))
       ]),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.black,
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          final addSubjectBool = await Navigator.of(context).push(
             MaterialPageRoute(builder: (BuildContext context) {
               return AddASubject();
             }),
           );
+
+          if (addSubjectBool) {
+            _refreshSubjects();
+            setState(() {});
+          }
         },
         child: const Icon(Icons.add),
       ),

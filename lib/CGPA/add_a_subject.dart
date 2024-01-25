@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:trackie/Models/SubjectModel.dart';
-import 'package:trackie/Providers/SubjectProvider.dart';
+import 'package:trackie/Providers/DatabaseProvider.dart';
 
 class AddASubject extends StatefulWidget {
   AddASubject({Key? key}) : super(key: key);
 
   int id = 0;
   String subject = "", sem = "";
-  int credits = 0, midsemGrade = 0, finalGrade = 0;
+  int credits = 0, grade = 0;
 
   AddASubject.withData({
     Key? key,
     required this.subject,
     required this.credits,
     required this.sem,
-    required this.midsemGrade,
-    required this.finalGrade,
+    required this.grade,
   }) : super(key: key);
 
   @override
@@ -26,9 +25,8 @@ class _AddASubjectState extends State<AddASubject> {
   TextEditingController subject = TextEditingController();
   TextEditingController credits = TextEditingController();
   TextEditingController sem = TextEditingController();
-  TextEditingController midsemGrade = TextEditingController();
-  TextEditingController finalGrade = TextEditingController();
-  late SubjectProvider _subjectProvider;
+  TextEditingController grade = TextEditingController();
+  late DatabaseProvider _databaseProvider;
 
   bool isLoading = false;
   bool isLoadingDelete = false;
@@ -38,8 +36,7 @@ class _AddASubjectState extends State<AddASubject> {
     subject.text = "";
     credits.text = "";
     sem.text = "";
-    midsemGrade.text = "";
-    finalGrade.text = "";
+    grade.text = "";
 
     if (widget.subject != "") {
       subject.text = widget.subject;
@@ -53,17 +50,13 @@ class _AddASubjectState extends State<AddASubject> {
       credits.text = widget.credits.toString();
     }
 
-    if (widget.midsemGrade.toString() != "") {
-      midsemGrade.text = widget.midsemGrade.toString();
-    }
-
-    if (widget.finalGrade.toString() != "") {
-      finalGrade.text = widget.finalGrade.toString();
+    if (widget.grade.toString() != "") {
+      grade.text = widget.grade.toString();
     }
 
     super.initState();
-    _subjectProvider = SubjectProvider();
-    _subjectProvider.initializeDB().whenComplete(() async {
+    _databaseProvider = DatabaseProvider();
+    _databaseProvider.initializeDB().whenComplete(() async {
       setState(() {});
     });
   }
@@ -118,22 +111,10 @@ class _AddASubjectState extends State<AddASubject> {
               Container(height: 20),
 
               TextField(
-                  controller: midsemGrade,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.grade),
-                    labelText: "Midsem Grade",
-                    hintStyle:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
-                    labelStyle: TextStyle(fontSize: 13, color: Colors.black),
-                  )),
-
-              Container(height: 20),
-
-              TextField(
-                  controller: finalGrade,
+                  controller: grade,
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.grade_outlined),
-                    labelText: "Final Grade",
+                    labelText: "Grade",
                     hintStyle:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
                     labelStyle: TextStyle(fontSize: 13, color: Colors.black),
@@ -160,11 +141,10 @@ class _AddASubjectState extends State<AddASubject> {
                           subject: subject.text.trim(),
                           credits: int.parse(credits.text),
                           sem: sem.text.trim(),
-                          midsemGrade: int.parse(midsemGrade.text),
-                          finalGrade: int.parse(finalGrade.text),
+                          grade: int.parse(grade.text),
                         );
                         result =
-                            await _subjectProvider.addSubject(subjectModel);
+                            await _databaseProvider.addSubject(subjectModel);
                         setState(() {
                           isLoading = false;
                         });
@@ -174,10 +154,9 @@ class _AddASubjectState extends State<AddASubject> {
                             subject: subject.text.trim(),
                             credits: int.parse(credits.text),
                             sem: sem.text.trim(),
-                            midsemGrade: int.parse(midsemGrade.text),
-                            finalGrade: int.parse(finalGrade.text));
+                            grade: int.parse(grade.text));
                         result =
-                            await _subjectProvider.addSubject(subjectModel);
+                            await _databaseProvider.addSubject(subjectModel);
                         setState(() {
                           isLoading = false;
                         });

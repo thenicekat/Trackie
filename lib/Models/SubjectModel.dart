@@ -3,24 +3,21 @@ class SubjectModel {
   late String subject;
   late String sem;
   late int credits;
-  late int midsemGrade;
-  late int finalGrade;
+  late int grade;
 
   SubjectModel(
       {this.id,
       required this.subject,
       required this.sem,
       required this.credits,
-      required this.midsemGrade,
-      required this.finalGrade});
+      required this.grade});
 
   SubjectModel.fromMap(Map<String, dynamic> item) {
     id = item["id"];
     subject = item["subject"];
     sem = item["sem"];
     credits = item["credits"];
-    midsemGrade = item["midsemGrade"];
-    finalGrade = item["finalGrade"];
+    grade = item["grade"];
   }
 
   Map<String, dynamic> toMap() {
@@ -29,8 +26,7 @@ class SubjectModel {
       'subject': subject,
       'sem': sem,
       'credits': credits,
-      'midsemGrade': midsemGrade,
-      'finalGrade': finalGrade,
+      'grade': grade,
     };
   }
 }

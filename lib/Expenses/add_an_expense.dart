@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trackie/Models/ExpenseModel.dart';
-import 'package:trackie/Providers/ExpenseProvider.dart';
+import 'package:trackie/Providers/DatabaseProvider.dart';
 
 class AddExpense extends StatefulWidget {
   AddExpense({Key? key}) : super(key: key);
@@ -26,7 +26,7 @@ class _AddExpenseState extends State<AddExpense> {
   TextEditingController itemName = TextEditingController();
   bool isLoading = false;
   bool isLoadingDelete = false;
-  late ExpenseProvider _expenseProvider;
+  late DatabaseProvider _databaseProvider;
 
   @override
   void initState() {
@@ -40,8 +40,8 @@ class _AddExpenseState extends State<AddExpense> {
     }
 
     super.initState();
-    _expenseProvider = ExpenseProvider();
-    _expenseProvider.initializeDB().whenComplete(() async {
+    _databaseProvider = DatabaseProvider();
+    _databaseProvider.initializeDB().whenComplete(() async {
       setState(() {});
     });
   }
@@ -101,7 +101,7 @@ class _AddExpenseState extends State<AddExpense> {
                       ExpenseModel expenseModel = ExpenseModel(
                           itemName: itemName.text.trim(),
                           moneySpent: int.parse(price.text));
-                      result = await _expenseProvider.addExpense(expenseModel);
+                      result = await _databaseProvider.addExpense(expenseModel);
                       setState(() {
                         isLoading = false;
                       });
@@ -110,7 +110,7 @@ class _AddExpenseState extends State<AddExpense> {
                           id: widget.id,
                           itemName: itemName.text.trim(),
                           moneySpent: int.parse(price.text));
-                      result = await _expenseProvider.addExpense(expenseModel);
+                      result = await _databaseProvider.addExpense(expenseModel);
                       setState(() {
                         isLoading = false;
                       });
@@ -150,7 +150,7 @@ class _AddExpenseState extends State<AddExpense> {
                     try {
                       if (widget.id == 0) {
                       } else {
-                        _expenseProvider.deleteExpense(widget.id);
+                        _databaseProvider.deleteExpense(widget.id);
                         setState(() {
                           isLoadingDelete = false;
                         });

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trackie/Expenses/add_an_expense.dart';
-import 'package:trackie/Providers/ExpenseProvider.dart';
+import 'package:trackie/Providers/DatabaseProvider.dart';
 import 'package:trackie/Models/ExpenseModel.dart';
 
 class ExpensesPage extends StatefulWidget {
@@ -11,15 +11,15 @@ class ExpensesPage extends StatefulWidget {
 }
 
 class _ExpensesPageState extends State<ExpensesPage> {
-  late ExpenseProvider _expenseProvider;
+  late DatabaseProvider _databaseProvider;
   int totalSpent = 0;
   bool isLoading = false;
   bool isLoadingReset = false;
   List<ExpenseModel> _expenses = [];
 
   void _refreshExpenses() async {
-    final data = await _expenseProvider.retrieveExpenses();
-    final sum = await _expenseProvider.getTotalSpent();
+    final data = await _databaseProvider.retrieveExpenses();
+    final sum = await _databaseProvider.getTotalSpent();
     setState(() {
       _expenses = data;
       totalSpent = -sum;
@@ -30,8 +30,8 @@ class _ExpensesPageState extends State<ExpensesPage> {
   @override
   void initState() {
     super.initState();
-    _expenseProvider = ExpenseProvider();
-    _expenseProvider.initializeDB().whenComplete(() async {
+    _databaseProvider = DatabaseProvider();
+    _databaseProvider.initializeDB().whenComplete(() async {
       _refreshExpenses();
       setState(() {
         isLoading = true;
@@ -163,7 +163,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                             isLoadingReset = true;
                           });
                           try {
-                            _expenseProvider.truncateExpenses();
+                            _databaseProvider.truncateExpenses();
                             _refreshExpenses();
                             setState(() {
                               isLoadingReset = false;
@@ -177,9 +177,9 @@ class _ExpensesPageState extends State<ExpensesPage> {
                           }
                         },
                         child: isLoadingReset
-                            ? Row(
+                            ? const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
+                                children: [
                                     CircularProgressIndicator(
                                       color: Colors.black,
                                     ),

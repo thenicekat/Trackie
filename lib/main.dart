@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trackie/CGPA/subjects_page.dart';
-import 'package:trackie/Evaluatives/eval_page.dart';
 import 'package:trackie/Expenses/expenses_page.dart';
 
 void main() async {
@@ -25,7 +24,6 @@ class _MyAppState extends State<MyApp> {
   //Make a list of widgets
   List<Widget> pages = const [
     ExpensesPage(),
-    EvalPage(),
     SubjectsPage(),
   ];
 
@@ -42,28 +40,24 @@ class _MyAppState extends State<MyApp> {
               const EdgeInsets.only(right: 16, left: 16, top: 50, bottom: 0),
           child: pages[currentIndex],
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(
-              label: 'Expenses',
-              icon: Icon(Icons.money),
-            ),
-            BottomNavigationBarItem(
-              label: 'Evals',
-              icon: Icon(Icons.book),
-            ),
-            BottomNavigationBarItem(
-              label: 'CGPA',
-              icon: Icon(Icons.numbers),
-            ),
-          ],
-          currentIndex: currentIndex,
-          onTap: (int index) {
-            setState(() {
-              currentIndex = index;
-            });
-          },
-        ),
+        // bottomNavigationBar: BottomNavigationBar(
+        //   items: const [
+        //     BottomNavigationBarItem(
+        //       label: 'Expenses',
+        //       icon: Icon(Icons.money),
+        //     ),
+        //     BottomNavigationBarItem(
+        //       label: 'CGPA',
+        //       icon: Icon(Icons.numbers),
+        //     ),
+        //   ],
+        //   currentIndex: currentIndex,
+        //   onTap: (int index) {
+        //     setState(() {
+        //       currentIndex = index;
+        //     });
+        //   },
+        // ),
       ),
     );
   }
