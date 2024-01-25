@@ -91,61 +91,90 @@ class _ExpensesPageState extends State<ExpensesPage> {
                           width: MediaQuery.of(context).size.width * 0.9,
                           height: MediaQuery.of(context).size.height * 0.5,
                           child: SingleChildScrollView(
-                            child: DataTable(
-                              showCheckboxColumn: false,
-                              columns: const [
-                                DataColumn(
-                                  label: Text(
-                                    "Item Name",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Text(
-                                    "Amount",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              rows: [
+                            child: Column(
+                              children: [
                                 for (var expense in _expenses)
-                                  DataRow(
-                                      cells: [
-                                        DataCell(Text(
-                                          expense.itemName.toString(),
-                                          style: const TextStyle(fontSize: 20),
-                                        )),
-                                        DataCell(Text(
-                                          expense.moneySpent.toString(),
-                                          style: const TextStyle(fontSize: 20),
-                                        )),
-                                      ],
-                                      onSelectChanged: (value) async {
-                                        final addExpenseBool =
-                                            await Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) {
-                                            return AddExpense.withData(
-                                              id: expense.id as int,
-                                              itemName:
-                                                  expense.itemName as String,
-                                              moneySpent:
-                                                  expense.moneySpent.toString(),
+                                  Card(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        ListTile(
+                                          leading: const Icon(Icons.money),
+                                          title: Text(
+                                            expense.itemName.toString(),
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 20),
+                                          ),
+                                          subtitle: Text(
+                                            expense.moneySpent.toString(),
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 20),
+                                          ),
+                                          onLongPress: () async {
+                                            final addExpenseBool =
+                                                await Navigator.of(context)
+                                                    .push(
+                                              MaterialPageRoute(builder:
+                                                  (BuildContext context) {
+                                                return AddExpense.withData(
+                                                  id: expense.id as int,
+                                                  itemName: expense.itemName
+                                                      as String,
+                                                  moneySpent: expense.moneySpent
+                                                      .toString(),
+                                                );
+                                              }),
                                             );
-                                          }),
-                                        );
 
-                                        if (addExpenseBool) {
-                                          _refreshExpenses();
-                                          setState(() {});
-                                        }
-                                      })
+                                            if (addExpenseBool) {
+                                              _refreshExpenses();
+                                              setState(() {});
+                                            }
+                                          },
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: <Widget>[
+                                            Text(
+                                              "Datetime: ${DateTime.fromMillisecondsSinceEpoch(expense.datetime).toLocal().toString().split(".")[0]}",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 15),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            TextButton(
+                                              child: const Text('DELETE'),
+                                              onPressed: () async {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
+                                                try {
+                                                  _databaseProvider
+                                                      .deleteExpense(
+                                                          expense.id as int);
+                                                  _refreshExpenses();
+                                                  setState(() {
+                                                    isLoading = false;
+                                                  });
+                                                } on Exception {
+                                                  const snackBar = SnackBar(
+                                                    content: Text(
+                                                        'Error deleting expense'),
+                                                  );
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(snackBar);
+                                                }
+                                              },
+                                            ),
+                                            const SizedBox(width: 8),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )
                               ],
                             ),
                           ),

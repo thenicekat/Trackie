@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trackie/Models/ExpenseModel.dart';
 import 'package:trackie/Providers/DatabaseProvider.dart';
 
+// ignore: must_be_immutable
 class AddExpense extends StatefulWidget {
   AddExpense({Key? key}) : super(key: key);
 
@@ -60,6 +61,7 @@ class _AddExpenseState extends State<AddExpense> {
 
             TextField(
                 controller: itemName,
+                textCapitalization: TextCapitalization.words,
                 decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.abc_rounded),
                   labelText: "Item Name",
@@ -100,7 +102,8 @@ class _AddExpenseState extends State<AddExpense> {
                     if (widget.id == 0) {
                       ExpenseModel expenseModel = ExpenseModel(
                           itemName: itemName.text.trim(),
-                          moneySpent: int.parse(price.text));
+                          moneySpent: int.parse(price.text),
+                          datetime: DateTime.now().millisecondsSinceEpoch);
                       result = await _databaseProvider.addExpense(expenseModel);
                       setState(() {
                         isLoading = false;
@@ -109,18 +112,21 @@ class _AddExpenseState extends State<AddExpense> {
                       ExpenseModel expenseModel = ExpenseModel(
                           id: widget.id,
                           itemName: itemName.text.trim(),
-                          moneySpent: int.parse(price.text));
+                          moneySpent: int.parse(price.text),
+                          datetime: DateTime.now().millisecondsSinceEpoch);
                       result = await _databaseProvider.addExpense(expenseModel);
                       setState(() {
                         isLoading = false;
                       });
                     }
 
+                    // ignore: use_build_context_synchronously
                     Navigator.pop(context, true);
                   } on FormatException {
                     const snackBar = SnackBar(
                       content: Text('Fill in all the fields'),
                     );
+                    // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                 },

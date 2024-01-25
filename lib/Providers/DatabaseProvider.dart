@@ -12,7 +12,7 @@ class DatabaseProvider {
       join(path, 'database.db'),
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE Expenses (id INTEGER PRIMARY KEY AUTOINCREMENT, itemName VARCHAR(100), moneySpent INTEGER)');
+            'CREATE TABLE Expenses (id INTEGER PRIMARY KEY AUTOINCREMENT, itemName VARCHAR(100), moneySpent INTEGER, datetime INTEGER)');
         await database.execute(
             'CREATE TABLE Subjects (id INTEGER PRIMARY KEY AUTOINCREMENT, subject VARCHAR(100) UNIQUE, sem VARCHAR(100), credits INTEGER, grade INTEGER)');
       },
