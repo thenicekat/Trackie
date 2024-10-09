@@ -2,13 +2,21 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingVi
 import React from 'react'
 import { defaultStyles } from '@/constants/Styles'
 import Colors from '@/constants/Colors';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import { useAccountStore } from '@/store/accountStore';
 
 const LogIn = () => {
-    const [name, setName] = React.useState('');
+    const [nameInput, setNameInput] = React.useState('');
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 90 : 0;
 
-    const onLogIn = () => { };
+    const router = useRouter();
+    const { setName } = useAccountStore();
+
+
+    const onBoard = () => {
+        setName(nameInput)
+        router.push("/home/(tabs)/expenses")
+    };
 
     return (
         <KeyboardAvoidingView
@@ -28,12 +36,12 @@ const LogIn = () => {
                         style={[styles.input, { flex: 1 }]}
                         placeholder="Name"
                         keyboardType='default'
-                        value={name}
-                        onChangeText={setName}
+                        value={nameInput}
+                        onChangeText={setNameInput}
                     />
                 </View>
 
-                <TouchableOpacity style={[defaultStyles.pillButton, { backgroundColor: name == '' ? Colors.primaryMuted : Colors.primary, marginBottom: 20 }]} onPress={onLogIn}>
+                <TouchableOpacity style={[defaultStyles.pillButton, { backgroundColor: nameInput == '' ? Colors.primaryMuted : Colors.primary, marginBottom: 20 }]} onPress={onBoard}>
                     <Text style={defaultStyles.buttonText}>Continue.</Text>
                 </TouchableOpacity>
 
@@ -45,6 +53,7 @@ const LogIn = () => {
 
                 <TouchableOpacity style={[defaultStyles.pillButton, { backgroundColor: Colors.primary, marginVertical: 20 }]} onPress={() => {
                     setName("Anonymous")
+                    onBoard()
                 }}>
                     <Text style={defaultStyles.buttonText}>Stay Anonymous.</Text>
                 </TouchableOpacity>

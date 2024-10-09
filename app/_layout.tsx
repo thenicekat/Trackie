@@ -1,12 +1,13 @@
 import Colors from '@/constants/Colors';
+import { useAccountStore } from '@/store/accountStore';
 import { Ionicons } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
-import { Link, Stack, useRouter } from 'expo-router';
+import { Link, Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Text } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export {
@@ -16,7 +17,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  initialRouteName: '/',
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -28,6 +29,8 @@ const InitialLayout = () => {
     ...FontAwesome.font,
   });
   const router = useRouter();
+  const segments = useSegments();
+  const { name } = useAccountStore();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -40,8 +43,15 @@ const InitialLayout = () => {
     }
   }, [loaded]);
 
+  useEffect(() => {
+    if (name != '')
+      router.replace('/home/(tabs)/expenses');
+    else
+      router.replace('/onboard');
+  }, [name])
+
   if (!loaded) {
-    return null;
+    return <Text>Loading...</Text>;
   }
 
   return (
@@ -70,6 +80,10 @@ const InitialLayout = () => {
       <Stack.Screen name="help" options={{
         title: 'Help',
         presentation: 'modal',
+      }} />
+
+      <Stack.Screen name="home/(tabs)" options={{
+        headerShown: false,
       }} />
     </Stack>
   );
