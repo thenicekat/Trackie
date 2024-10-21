@@ -27,7 +27,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
-        <data android:scheme="com.divyateja.trackie"/>
+        <data android:scheme="com.divyateja.notie"/>
         <data android:scheme="exp+fintech"/>
       </intent-filter>
     </activity>

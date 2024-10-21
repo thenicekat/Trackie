@@ -1,4 +1,4 @@
-package com.divyateja.trackie
+package com.divyateja.notie
 
 import android.app.Application
 import android.content.res.Configuration

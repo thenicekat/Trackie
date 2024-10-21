@@ -109,9 +109,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.divyateja.trackie'
+    namespace 'com.divyateja.notie'
     defaultConfig {
-        applicationId 'com.divyateja.trackie'
+        applicationId 'com.divyateja.notie'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

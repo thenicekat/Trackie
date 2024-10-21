@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>myapp</string>
-          <string>com.divyateja.trackie</string>
+          <string>com.divyateja.notie</string>
         </array>
       </dict>
       <dict>

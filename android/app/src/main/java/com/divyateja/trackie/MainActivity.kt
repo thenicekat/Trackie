@@ -1,4 +1,4 @@
-package com.divyateja.trackie
+package com.divyateja.notie
 
 import android.os.Build
 import android.os.Bundle

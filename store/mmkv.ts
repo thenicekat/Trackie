@@ -2,7 +2,7 @@ import { StateStorage } from 'zustand/middleware'
 import { MMKV } from 'react-native-mmkv'
 
 const storage = new MMKV({
-    id: 'trackie.zustand'
+    id: 'notie.zustand'
 })
 
 export const zustandStorage: StateStorage = {
