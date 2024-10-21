@@ -28,7 +28,16 @@
             "output": "static",
             "favicon": "./assets/images/favicon.png"
         },
-        "plugins": ["expo-router", "expo-asset"],
+        "plugins": [
+            "expo-router",
+            "expo-asset",
+            [
+                "expo-local-authentication",
+                {
+                    "faceIDPermission": "Please allow $(PRODUCT_NAME) to use Face ID for authentication."
+                }
+            ]
+        ],
         "experiments": {
             "typedRoutes": true
         }

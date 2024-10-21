@@ -2,6 +2,7 @@ import React from 'react'
 import { Tabs } from 'expo-router'
 import { FontAwesome } from '@expo/vector-icons'
 import Colors from '@/constants/Colors'
+import { BlurView } from 'expo-blur'
 
 const Layout = () => {
     return (
@@ -9,6 +10,23 @@ const Layout = () => {
             screenOptions={{
                 tabBarActiveTintColor: Colors.primary,
                 headerShown: false,
+                tabBarBackground: () => <BlurView
+                    intensity={100}
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'rgba(0,0,0,0.05)',
+                    }}
+                />,
+                tabBarStyle: {
+                    backgroundColor: 'transparent',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    borderTopWidth: 0,
+                    elevation: 0,
+                    shadowOpacity: 0,
+                }
             }}
         >
 

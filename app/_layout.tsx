@@ -1,4 +1,5 @@
 import Colors from '@/constants/Colors';
+import { UserInactivityProvider } from '@/context/UserInactivity';
 import { useNoteStore } from '@/store/noteStore';
 import { Ionicons } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -87,6 +88,15 @@ const InitialLayout = () => {
         headerShadowVisible: false,
         headerShown: false,
       }} />
+
+      <Stack.Screen name="(modals)/lock" options={{
+        title: '',
+        headerBackTitle: '',
+        headerShadowVisible: false,
+        headerShown: false,
+        animation: 'none'
+      }} />
+
     </Stack>
   );
 }
@@ -94,10 +104,12 @@ const InitialLayout = () => {
 const RootLayoutNav = () => {
   return (
     <>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <StatusBar style="dark" />
-        <InitialLayout />
-      </GestureHandlerRootView>
+      <UserInactivityProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <StatusBar style="dark" />
+          <InitialLayout />
+        </GestureHandlerRootView>
+      </UserInactivityProvider>
     </>
   )
 }

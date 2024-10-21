@@ -53,7 +53,7 @@ const notes = () => {
                             >
 
                                 <View
-                                    style={tw`flex-1 align-items-center justify-center p-2`}
+                                    style={tw`flex-1 justify-center p-2`}
                                 >
                                     <Text style={tw`text-xl font-bold uppercase`}>{note.title}</Text>
                                     <Text style={tw`text-lg`}>{note.content}</Text>
