@@ -5,7 +5,6 @@ import { ResizeMode, Video } from 'expo-av'
 import { TouchableOpacity } from 'react-native'
 import { defaultStyles } from '@/constants/Styles'
 import { Link } from 'expo-router'
-import Colors from '@/constants/Colors'
 
 const Page = () => {
     const [assets] = useAssets([require('@/assets/videos/intro.mp4')])
@@ -25,7 +24,7 @@ const Page = () => {
             }
 
             <View style={{ marginTop: 80, padding: 20 }}>
-                <Text style={[styles.header, { color: 'white' }]}>Change the way you track expenses</Text>
+                <Text style={[styles.header, { color: 'white' }]}>Note down. Your way.</Text>
             </View>
 
             <View style={styles.buttons}>
@@ -47,7 +46,8 @@ const styles = StyleSheet.create({
     video: {
         width: '100%',
         height: '100%',
-        position: 'absolute'
+        position: 'absolute',
+        opacity: 0.5,
     },
     header: {
         fontSize: 36,

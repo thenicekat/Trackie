@@ -3,26 +3,27 @@ import React from 'react'
 import { defaultStyles } from '@/constants/Styles'
 import Colors from '@/constants/Colors';
 import { Link, useRouter } from 'expo-router';
-import { useAccountStore } from '@/store/accountStore';
+import { useNoteStore } from '@/store/noteStore';
 
 const LogIn = () => {
     const [nameInput, setNameInput] = React.useState('');
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 90 : 0;
 
     const router = useRouter();
-    const { setName } = useAccountStore();
+    const { setName } = useNoteStore();
 
 
-    const onBoard = () => {
-        setName(nameInput)
-        router.push("/home/(tabs)/expenses")
+    const onBoard = (name: string) => {
+        setName(name)
+        router.push("/(tabs)/notes")
     };
 
     return (
         <KeyboardAvoidingView
             keyboardVerticalOffset={keyboardVerticalOffset}
             style={{ flex: 1 }}
-            behavior='padding'
+            behavior={(Platform.OS === 'ios') ? "padding" : undefined}
+            key="onboard"
         >
             <View style={defaultStyles.container}>
                 <Text style={defaultStyles.header}>Welcome!</Text>
@@ -41,19 +42,19 @@ const LogIn = () => {
                     />
                 </View>
 
-                <TouchableOpacity style={[defaultStyles.pillButton, { backgroundColor: nameInput == '' ? Colors.primaryMuted : Colors.primary, marginBottom: 20 }]} onPress={onBoard}>
+                <TouchableOpacity style={[defaultStyles.pillButton, { backgroundColor: nameInput == '' ? Colors.primaryMuted : Colors.primary, marginBottom: 20 }]} onPress={() => onBoard(nameInput)}>
                     <Text style={defaultStyles.buttonText}>Continue.</Text>
                 </TouchableOpacity>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
                     <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.gray }} />
-                    <Text style={{ color: Colors.gray, fontSize: 20 }}>OR</Text>
+                    <Text style={{ color: 'black', fontSize: 20 }}>OR</Text>
                     <View style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.gray }} />
                 </View>
 
                 <TouchableOpacity style={[defaultStyles.pillButton, { backgroundColor: Colors.primary, marginVertical: 20 }]} onPress={() => {
                     setName("Anonymous")
-                    onBoard()
+                    onBoard("Anonymous")
                 }}>
                     <Text style={defaultStyles.buttonText}>Stay Anonymous.</Text>
                 </TouchableOpacity>

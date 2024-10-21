@@ -1,5 +1,5 @@
 import Colors from '@/constants/Colors';
-import { useAccountStore } from '@/store/accountStore';
+import { useNoteStore } from '@/store/noteStore';
 import { Ionicons } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
@@ -7,7 +7,7 @@ import { Link, Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export {
@@ -30,7 +30,7 @@ const InitialLayout = () => {
   });
   const router = useRouter();
   const segments = useSegments();
-  const { name } = useAccountStore();
+  const { name, _hasHydrated } = useNoteStore();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -44,14 +44,25 @@ const InitialLayout = () => {
   }, [loaded]);
 
   useEffect(() => {
-    if (name != '')
-      router.replace('/home/(tabs)/expenses');
-    else
-      router.replace('/onboard');
-  }, [name])
+    // console.debug(`Hydration: ${_hasHydrated} | Loaded: ${loaded} | Name: ${name}`);
+    if (!_hasHydrated) return;
+    if (!loaded) return;
+
+    const inTabsGroup = segments[0] === "(tabs)";
+
+    if (name && !inTabsGroup) {
+      router.replace("/(tabs)/notes");
+    } else if (!name && inTabsGroup) {
+      router.replace("/");
+    }
+  }, [_hasHydrated, loaded, name]);
 
   if (!loaded) {
-    return <Text>Loading...</Text>;
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
   }
 
   return (
@@ -68,21 +79,12 @@ const InitialLayout = () => {
             <Ionicons name="arrow-back" size={34} color={Colors.dark} />
           </TouchableOpacity>
         ),
-        headerRight: () => (
-          <Link href={'/help'}>
-            <TouchableOpacity>
-              <Ionicons name="help-circle-outline" size={34} color={Colors.dark} />
-            </TouchableOpacity>
-          </Link>
-        )
       }} />
 
-      <Stack.Screen name="help" options={{
-        title: 'Help',
-        presentation: 'modal',
-      }} />
-
-      <Stack.Screen name="home/(tabs)" options={{
+      <Stack.Screen name="(tabs)" options={{
+        title: '',
+        headerBackTitle: '',
+        headerShadowVisible: false,
         headerShown: false,
       }} />
     </Stack>
