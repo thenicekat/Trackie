@@ -14,7 +14,6 @@ interface NoteState {
 
     notes: Note[];
     addNote: (note: Note) => void;
-    searchNote: (query: string) => Note[];
     deleteNote: (id: string) => void;
 
     _hasHydrated: boolean;
@@ -29,7 +28,6 @@ export const useNoteStore = create<NoteState>()(
 
             notes: [],
             addNote: (note: Note) => set((state) => ({ ...state, notes: [...state.notes, note] })),
-            searchNote: (query: string) => get().notes.filter((note) => note.content.includes(query) || note.title.includes(query)),
             deleteNote: (id: string) => set((state) => ({ ...state, notes: state.notes.filter((note) => note.id !== id) })),
 
             _hasHydrated: false,

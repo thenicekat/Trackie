@@ -13,7 +13,8 @@ const notes = () => {
     const [filteredNotes, setFilteredNotes] = React.useState<Note[]>(notes);
 
     React.useEffect(() => {
-        setFilteredNotes(notes.filter((note) => note.content.includes(searchInput) || note.title.includes(searchInput)));
+        let searchInputLC = searchInput.toLowerCase();
+        setFilteredNotes(notes.filter((note) => note.content.toLowerCase().includes(searchInputLC) || note.title.toLowerCase().includes(searchInputLC)));
     }, [searchInput, notes]);
 
     return (
