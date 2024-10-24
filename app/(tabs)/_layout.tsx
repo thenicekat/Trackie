@@ -39,6 +39,13 @@ const Layout = () => {
                 title: 'Create',
                 tabBarIcon: ({ size, color }) => (<FontAwesome name='plus' size={size} color={color} />)
             }} />
+
+            <Tabs.Screen name="edit/[id]" options={{
+                title: 'Edit',
+                tabBarIcon: ({ size, color }) => (<FontAwesome name='pencil' size={size} color={color} />),
+                /* Disable one screen from showing in bottom bar */
+                href: null
+            }} />
         </Tabs>
     )
 }

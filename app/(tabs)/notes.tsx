@@ -4,10 +4,12 @@ import { Note, useNoteStore } from '@/store/noteStore'
 import { defaultStyles } from '@/constants/Styles';
 import tw from 'twrnc';
 import { FontAwesome } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 
 const notes = () => {
     const { name, notes, deleteNote } = useNoteStore();
+    const router = useRouter();
 
     const [searchInput, setSearchInput] = React.useState('');
     const [filteredNotes, setFilteredNotes] = React.useState<Note[]>(notes);
@@ -68,6 +70,16 @@ const notes = () => {
                                     onPress={() => {
                                         deleteNote(note.id)
                                         Alert.alert('Note Deleted', 'Note has been deleted successfully.')
+                                    }}
+                                />
+
+                                <FontAwesome
+                                    name="pencil"
+                                    size={30}
+                                    color={'black'}
+                                    style={tw`w-10 h-10 text-center m-2`}
+                                    onPress={() => {
+                                        router.push(`/edit/${note.id}`)
                                     }}
                                 />
                             </View>
