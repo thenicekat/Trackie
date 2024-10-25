@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TextInput, Alert, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { useNoteStore } from '@/store/noteStore'
+import React, { useEffect } from 'react'
+import { Note, useNoteStore } from '@/store/noteStore'
 import { defaultStyles } from '@/constants/Styles';
 import tw from 'twrnc';
 import Colors from '@/constants/Colors';
@@ -13,26 +13,35 @@ const editNote = () => {
 
     const { id } = useLocalSearchParams();
     const { name, notes, updateNote } = useNoteStore();
+    const [editableNote, setEditableNote] = React.useState<Note | null>(null);
+    const [titleInput, setTitleInput] = React.useState('');
+    const [contentInput, setContentInput] = React.useState('');
 
-    const note = notes.find((note) => note.id === id);
-
-    if (!note) {
-        router.replace('/notes')
-        return
-    }
-
-    const [titleInput, setTitleInput] = React.useState(note?.title);
-    const [contentInput, setContentInput] = React.useState(note?.content);
+    useEffect(() => {
+        const note = notes.find((note) => note.id === id);
+        if (!note) {
+            router.replace('/(tabs)/notes')
+            return
+        }
+        setEditableNote(note)
+        setTitleInput(note.title)
+        setContentInput(note.content)
+    }, [id, notes])
 
     const editNote = () => {
-        updateNote({ ...note, title: titleInput, content: contentInput })
+        if (!editableNote) {
+            router.replace('/(tabs)/notes')
+            return
+        }
+        updateNote({ ...editableNote, title: titleInput, content: contentInput })
         setTitleInput('')
         setContentInput('')
         Alert.alert(
             'Note Edited!',
             'Your note has edited successfully.',
         )
-        router.replace('/notes')
+        router.replace('/(tabs)/notes')
+        return
     }
 
     return (
@@ -76,6 +85,7 @@ const editNote = () => {
                             keyboardType='default'
                             value={contentInput}
                             onChangeText={setContentInput}
+                            multiline={true}
                         />
                     </View>
 

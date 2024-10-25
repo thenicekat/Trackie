@@ -9,7 +9,6 @@ const Layout = () => {
         <Tabs
             screenOptions={{
                 tabBarActiveTintColor: Colors.primary,
-                tabBarHideOnKeyboard: true,
                 headerShown: false,
                 tabBarBackground: () => <BlurView
                     intensity={100}

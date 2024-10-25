@@ -52,7 +52,7 @@ const InitialLayout = () => {
     const inTabsGroup = segments[0] === "(tabs)";
 
     if (name && !inTabsGroup) {
-      router.replace("/(tabs)/notes");
+      router.replace("/(modals)/lock");
     } else if (!name && inTabsGroup) {
       router.replace("/");
     }

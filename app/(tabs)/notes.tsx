@@ -19,6 +19,10 @@ const notes = () => {
         setFilteredNotes(notes.filter((note) => note.content.toLowerCase().includes(searchInputLC) || note.title.toLowerCase().includes(searchInputLC)));
     }, [searchInput, notes]);
 
+    const deleteNoteWithID = (id: string) => {
+        deleteNote(id)
+    }
+
     return (
         <ScrollView>
             <Text style={[defaultStyles.sectionHeader, { marginTop: 50 }]}>
@@ -72,7 +76,7 @@ const notes = () => {
                                             {
                                                 text: 'Yes',
                                                 onPress: () => {
-                                                    deleteNote(note.id)
+                                                    deleteNoteWithID(note.id)
                                                 }
                                             },
                                             {
@@ -89,7 +93,7 @@ const notes = () => {
                                     color={'black'}
                                     style={tw`w-10 h-10 text-center m-2`}
                                     onPress={() => {
-                                        router.push(`/edit/${note.id}`)
+                                        router.replace(`/edit/${note.id}`)
                                     }}
                                 />
                             </View>

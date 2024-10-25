@@ -15,7 +15,7 @@ const addNotes = () => {
 
     const createNote = () => {
         addNote({
-            id: Math.random().toString(36).substring(7),
+            id: Math.random().toString(36).substring(15),
             title: titleInput,
             content: contentInput
         })
@@ -68,6 +68,7 @@ const addNotes = () => {
                                 keyboardType='default'
                                 value={contentInput}
                                 onChangeText={setContentInput}
+                                multiline={true}
                             />
                         </View>
 

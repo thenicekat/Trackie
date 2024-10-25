@@ -49,7 +49,7 @@ const lockScreen = () => {
                 <View style={tw`h-[1px] bg-slate-500 my-1 w-full`} />
 
                 <View style={
-                    tw`flex-1 text-center p-2 m-2 rounded-2xl border-2 border-gray-300`
+                    tw`flex-1 text-center p-2 m-2`
                 }>
                     <TouchableOpacity
                         onPress={unlock}
@@ -57,7 +57,7 @@ const lockScreen = () => {
                     >
                         <Text style={
                             tw`text-lg font-bold text-gray-500`
-                        }>Please unlock to continue.</Text>
+                        }>Please click to unlock.</Text>
 
                         <FontAwesome name='lock' size={100} color='black' style={tw`text-center`} />
                     </TouchableOpacity>
