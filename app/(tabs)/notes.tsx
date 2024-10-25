@@ -68,8 +68,18 @@ const notes = () => {
                                     color={'red'}
                                     style={tw`w-10 h-10 text-center m-2`}
                                     onPress={() => {
-                                        deleteNote(note.id)
-                                        Alert.alert('Note Deleted', 'Note has been deleted successfully.')
+                                        Alert.alert('Confirm your delete.', 'Are you sure you want to delete.', [
+                                            {
+                                                text: 'Yes',
+                                                onPress: () => {
+                                                    deleteNote(note.id)
+                                                }
+                                            },
+                                            {
+                                                text: 'No',
+                                                onPress: () => { }
+                                            }
+                                        ])
                                     }}
                                 />
 

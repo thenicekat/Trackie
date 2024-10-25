@@ -21,7 +21,8 @@
                 "foregroundImage": "./assets/images/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
             },
-            "package": "com.divyateja.notie"
+            "package": "com.divyateja.notie",
+            "softwareKeyboardLayoutMode": "pan"
         },
         "web": {
             "bundler": "metro",

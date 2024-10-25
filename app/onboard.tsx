@@ -1,13 +1,13 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native'
 import React from 'react'
 import { defaultStyles } from '@/constants/Styles'
 import Colors from '@/constants/Colors';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useNoteStore } from '@/store/noteStore';
+import { keyboardAvoidingBehavior, keyboardVerticalOffset } from '@/app/constants';
 
 const LogIn = () => {
     const [nameInput, setNameInput] = React.useState('');
-    const keyboardVerticalOffset = Platform.OS === 'ios' ? 90 : 0;
 
     const router = useRouter();
     const { setName } = useNoteStore();
@@ -22,7 +22,7 @@ const LogIn = () => {
         <KeyboardAvoidingView
             keyboardVerticalOffset={keyboardVerticalOffset}
             style={{ flex: 1 }}
-            behavior={(Platform.OS === 'ios') ? "padding" : undefined}
+            behavior={keyboardAvoidingBehavior}
             key="onboard"
         >
             <View style={defaultStyles.container}>

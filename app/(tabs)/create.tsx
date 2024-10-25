@@ -1,15 +1,14 @@
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, TextInput, Alert } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native'
 import React from 'react'
 import { useNoteStore } from '@/store/noteStore'
 import { defaultStyles } from '@/constants/Styles';
 import tw from 'twrnc';
 import Colors from '@/constants/Colors';
+import { keyboardAvoidingBehavior, keyboardVerticalOffset } from '@/app/constants';
 
 
 const addNotes = () => {
     const { name, addNote } = useNoteStore();
-
-    const keyboardVerticalOffset = Platform.OS === 'ios' ? 90 : 0;
 
     const [titleInput, setTitleInput] = React.useState('');
     const [contentInput, setContentInput] = React.useState('');
@@ -29,24 +28,24 @@ const addNotes = () => {
     }
 
     return (
-        <View>
-            <Text style={[defaultStyles.sectionHeader, { marginTop: 50 }]}>
-                Hello! {name}
-            </Text>
+        <KeyboardAvoidingView
+            keyboardVerticalOffset={keyboardVerticalOffset}
+            style={{ flex: 1 }}
+            behavior={keyboardAvoidingBehavior}
+            key="addnote"
+        >
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <Text style={[defaultStyles.sectionHeader, { marginTop: 50 }]}>
+                    Hello! {name}
+                </Text>
 
-            <View style={tw`bg-gray-100 h-full p-4 w-full`}>
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-4xl font-bold`}>Create New Note.</Text>
-                </View>
+                <View style={tw`bg-gray-100 h-full p-4 w-full`}>
+                    <View style={tw`mb-4`}>
+                        <Text style={tw`text-4xl font-bold`}>Create New Note.</Text>
+                    </View>
 
-                <View style={tw`h-[1px] bg-slate-500 my-1 w-full`} />
+                    <View style={tw`h-[1px] bg-slate-500 my-1 w-full`} />
 
-                <KeyboardAvoidingView
-                    keyboardVerticalOffset={keyboardVerticalOffset}
-                    style={{ flex: 1 }}
-                    behavior={(Platform.OS === 'ios') ? "padding" : undefined}
-                    key="addnote"
-                >
                     <View style={defaultStyles.container}>
                         <View style={styles.inputContainer}>
                             <TextInput
@@ -81,9 +80,9 @@ const addNotes = () => {
                         </TouchableOpacity>
                     </View >
 
-                </KeyboardAvoidingView>
-            </View>
-        </View >
+                </View >
+            </ScrollView>
+        </KeyboardAvoidingView >
     )
 }
 

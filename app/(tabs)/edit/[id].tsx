@@ -1,10 +1,11 @@
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, TextInput, Alert } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TextInput, Alert, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNoteStore } from '@/store/noteStore'
 import { defaultStyles } from '@/constants/Styles';
 import tw from 'twrnc';
 import Colors from '@/constants/Colors';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { keyboardAvoidingBehavior, keyboardVerticalOffset } from '@/app/constants';
 
 
 const editNote = () => {
@@ -19,8 +20,6 @@ const editNote = () => {
         router.replace('/notes')
         return
     }
-
-    const keyboardVerticalOffset = Platform.OS === 'ios' ? 90 : 0;
 
     const [titleInput, setTitleInput] = React.useState(note?.title);
     const [contentInput, setContentInput] = React.useState(note?.content);
@@ -37,7 +36,12 @@ const editNote = () => {
     }
 
     return (
-        <View>
+        <KeyboardAvoidingView
+            keyboardVerticalOffset={keyboardVerticalOffset}
+            style={{ flex: 1 }}
+            behavior={keyboardAvoidingBehavior}
+            key="editnote"
+        >
             <Text style={[defaultStyles.sectionHeader, { marginTop: 50 }]}>
                 Hello! {name}
             </Text>
@@ -49,49 +53,43 @@ const editNote = () => {
 
                 <View style={tw`h-[1px] bg-slate-500 my-1 w-full`} />
 
-                <KeyboardAvoidingView
-                    keyboardVerticalOffset={keyboardVerticalOffset}
-                    style={{ flex: 1 }}
-                    behavior={(Platform.OS === 'ios') ? "padding" : undefined}
-                    key="addnote"
-                >
-                    <View style={defaultStyles.container}>
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={[styles.smolInput, { flex: 1 }]}
-                                placeholder="Please enter a title."
-                                keyboardType='default'
-                                value={titleInput}
-                                onChangeText={setTitleInput}
-                            />
-                        </View>
 
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={[styles.bigInput, {
-                                    flex: 1,
-                                    alignContent: 'flex-start',
-                                    verticalAlign: 'top'
-                                }]}
-                                placeholder="Please enter your note here."
-                                keyboardType='default'
-                                value={contentInput}
-                                onChangeText={setContentInput}
-                            />
-                        </View>
+                <View style={defaultStyles.container}>
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            style={[styles.smolInput, { flex: 1 }]}
+                            placeholder="Please enter a title."
+                            keyboardType='default'
+                            value={titleInput}
+                            onChangeText={setTitleInput}
+                        />
+                    </View>
 
-                        <TouchableOpacity
-                            style={[defaultStyles.pillButton, { backgroundColor: titleInput == '' ? Colors.primaryMuted : Colors.primary, marginBottom: 20 }]}
-                            disabled={titleInput == ''}
-                            onPress={editNote}
-                        >
-                            <Text style={defaultStyles.buttonText}>Edit.</Text>
-                        </TouchableOpacity>
-                    </View >
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            style={[styles.bigInput, {
+                                flex: 1,
+                                alignContent: 'flex-start',
+                                verticalAlign: 'top'
+                            }]}
+                            placeholder="Please enter your note here."
+                            keyboardType='default'
+                            value={contentInput}
+                            onChangeText={setContentInput}
+                        />
+                    </View>
 
-                </KeyboardAvoidingView>
-            </View>
-        </View >
+                    <TouchableOpacity
+                        style={[defaultStyles.pillButton, { backgroundColor: titleInput == '' ? Colors.primaryMuted : Colors.primary, marginBottom: 20 }]}
+                        disabled={titleInput == ''}
+                        onPress={editNote}
+                    >
+                        <Text style={defaultStyles.buttonText}>Edit.</Text>
+                    </TouchableOpacity>
+                </View >
+
+            </View >
+        </KeyboardAvoidingView>
     )
 }
 

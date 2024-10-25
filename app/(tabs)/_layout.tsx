@@ -9,16 +9,16 @@ const Layout = () => {
         <Tabs
             screenOptions={{
                 tabBarActiveTintColor: Colors.primary,
+                tabBarHideOnKeyboard: true,
                 headerShown: false,
                 tabBarBackground: () => <BlurView
                     intensity={100}
                     style={{
                         flex: 1,
-                        backgroundColor: 'rgba(0,0,0,0.05)',
                     }}
                 />,
                 tabBarStyle: {
-                    backgroundColor: 'transparent',
+                    backgroundColor: 'white',
                     position: 'absolute',
                     bottom: 0,
                     left: 0,
