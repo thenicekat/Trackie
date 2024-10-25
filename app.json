@@ -22,8 +22,7 @@
                 "backgroundColor": "#ffffff"
             },
             "package": "com.divyateja.notie",
-            "softwareKeyboardLayoutMode": "pan",
-            "versionCode": 2
+            "softwareKeyboardLayoutMode": "pan"
         },
         "web": {
             "bundler": "metro",
