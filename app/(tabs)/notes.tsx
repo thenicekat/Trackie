@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Alert, TextInput } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Alert, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Note, useNoteStore } from '@/store/noteStore'
 import { defaultStyles } from '@/constants/Styles';
@@ -54,16 +54,21 @@ const notes = () => {
                             <Text style={tw`text-xl m-2`}>No notes found.</Text>
                         </View>
                         : filteredNotes.map((note) => (
-                            <View
+                            <TouchableOpacity
                                 key={note.id}
                                 style={tw`bg-white p-2 my-2 rounded-lg flex-row justify-between`}
+                                onPress={() => {
+                                    router.push(`/edit/${note.id}`)
+                                }}
                             >
 
                                 <View
                                     style={tw`flex-1 justify-center p-2`}
                                 >
                                     <Text style={tw`text-xl font-bold uppercase`}>{note.title}</Text>
-                                    <Text style={tw`text-lg`}>{note.content}</Text>
+                                    <Text style={tw`text-lg`}>
+                                        {note.content.slice(0, 100)}
+                                    </Text>
                                 </View>
 
                                 <FontAwesome
@@ -72,7 +77,7 @@ const notes = () => {
                                     color={'red'}
                                     style={tw`w-10 h-10 text-center m-2`}
                                     onPress={() => {
-                                        Alert.alert('Confirm your delete.', 'Are you sure you want to delete.', [
+                                        Alert.alert('Confirm your deletion.', 'Are you sure you want to delete.', [
                                             {
                                                 text: 'Yes',
                                                 onPress: () => {
@@ -86,17 +91,7 @@ const notes = () => {
                                         ])
                                     }}
                                 />
-
-                                <FontAwesome
-                                    name="pencil"
-                                    size={30}
-                                    color={'black'}
-                                    style={tw`w-10 h-10 text-center m-2`}
-                                    onPress={() => {
-                                        router.replace(`/edit/${note.id}`)
-                                    }}
-                                />
-                            </View>
+                            </TouchableOpacity>
                         ))
                 }
             </View>
