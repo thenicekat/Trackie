@@ -5,6 +5,7 @@ import { defaultStyles } from '@/constants/Styles';
 import tw from 'twrnc';
 import Colors from '@/constants/Colors';
 import { keyboardAvoidingBehavior, keyboardVerticalOffset } from '@/app/constants';
+import uuid from 'react-native-uuid';
 
 
 const addNotes = () => {
@@ -14,8 +15,9 @@ const addNotes = () => {
     const [contentInput, setContentInput] = React.useState('');
 
     const createNote = () => {
+        let id = uuid.v4().toString()
         addNote({
-            id: Math.random().toString(36).substring(15),
+            id: id,
             title: titleInput,
             content: contentInput
         })

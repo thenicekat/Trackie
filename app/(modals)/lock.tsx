@@ -49,12 +49,13 @@ const lockScreen = () => {
                 <View style={tw`h-[1px] bg-slate-500 my-1 w-full`} />
 
                 <View style={
-                    tw`flex-1 text-center p-2 m-2`
+                    tw`flex-1 p-2 m-2`
                 }>
                     <TouchableOpacity
                         onPress={unlock}
-                        style={tw`flex-1 justify-center items-center text-center`}
+                        style={tw`flex-1 justify-center items-center`}
                     >
+                        <View style={tw`flex-1`} />
                         <Text style={
                             tw`text-lg font-bold text-gray-500`
                         }>Please click to unlock.</Text>
