@@ -2,14 +2,14 @@ import { View, Text, SafeAreaView, TouchableOpacity, Alert } from 'react-native'
 import React from 'react'
 import { defaultStyles } from '@/constants/Styles';
 import tw from 'twrnc';
-import { useNoteStore } from '@/store/noteStore';
+import { useNoteState } from '@/store/noteStore';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 
 
 const lockScreen = () => {
-    const { name } = useNoteStore();
+    const { name } = useNoteState();
     const router = useRouter();
 
     const unlock = async () => {

@@ -1,15 +1,16 @@
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native'
 import React from 'react'
-import { useNoteStore } from '@/store/noteStore'
+import { useNoteState } from '@/store/noteStore'
 import { defaultStyles } from '@/constants/Styles';
 import tw from 'twrnc';
 import Colors from '@/constants/Colors';
 import { keyboardAvoidingBehavior, keyboardVerticalOffset } from '@/app/constants';
 import uuid from 'react-native-uuid';
+import Header from '@/components/Header';
 
 
 const addNotes = () => {
-    const { name, addNote } = useNoteStore();
+    const { name, addNote } = useNoteState();
 
     const [titleInput, setTitleInput] = React.useState('');
     const [contentInput, setContentInput] = React.useState('');
@@ -37,9 +38,7 @@ const addNotes = () => {
             key="addnote"
         >
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <Text style={[defaultStyles.sectionHeader, { marginTop: 50 }]}>
-                    Hello! {name}
-                </Text>
+                <Header />
 
                 <View style={tw`bg-gray-100 h-full p-4 w-full`}>
                     <View style={tw`mb-4`}>

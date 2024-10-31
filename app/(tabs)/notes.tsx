@@ -1,14 +1,15 @@
 import { View, Text, StyleSheet, ScrollView, Alert, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { Note, useNoteStore } from '@/store/noteStore'
+import { Note, useNoteState } from '@/store/noteStore'
 import { defaultStyles } from '@/constants/Styles';
 import tw from 'twrnc';
 import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import Header from '@/components/Header';
 
 
 const notes = () => {
-    const { name, notes, deleteNote } = useNoteStore();
+    const { name, notes, deleteNote } = useNoteState();
     const router = useRouter();
 
     const [searchInput, setSearchInput] = React.useState('');
@@ -25,9 +26,7 @@ const notes = () => {
 
     return (
         <ScrollView>
-            <Text style={[defaultStyles.sectionHeader, { marginTop: 50 }]}>
-                Hello! {name}
-            </Text>
+            <Header />
 
             <View style={tw`bg-gray-100 h-full p-4 w-full`}>
                 <View style={tw`mb-4`}>

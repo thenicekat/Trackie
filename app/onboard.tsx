@@ -3,14 +3,14 @@ import React from 'react'
 import { defaultStyles } from '@/constants/Styles'
 import Colors from '@/constants/Colors';
 import { useRouter } from 'expo-router';
-import { useNoteStore } from '@/store/noteStore';
+import { useNoteState } from '@/store/noteStore';
 import { keyboardAvoidingBehavior, keyboardVerticalOffset } from '@/app/constants';
 
 const LogIn = () => {
     const [nameInput, setNameInput] = React.useState('');
 
     const router = useRouter();
-    const { setName } = useNoteStore();
+    const { setName } = useNoteState();
 
 
     const onBoard = (name: string) => {

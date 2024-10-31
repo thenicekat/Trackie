@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TextInput, Alert, TouchableOpacity } from 'react-native'
 import React, { useEffect } from 'react'
-import { Note, useNoteStore } from '@/store/noteStore'
+import { Note, useNoteState } from '@/store/noteStore'
 import { defaultStyles } from '@/constants/Styles';
 import tw from 'twrnc';
 import Colors from '@/constants/Colors';
@@ -12,7 +12,7 @@ const editNote = () => {
     const router = useRouter();
 
     const { id } = useLocalSearchParams();
-    const { name, notes, updateNote } = useNoteStore();
+    const { name, notes, updateNote } = useNoteState();
     const [editableNote, setEditableNote] = React.useState<Note | null>(null);
     const [titleInput, setTitleInput] = React.useState('');
     const [contentInput, setContentInput] = React.useState('');

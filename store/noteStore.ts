@@ -21,7 +21,7 @@ interface NoteState {
     setHasHydrated: (hydration: boolean) => void;
 }
 
-export const useNoteStore = create<NoteState>()(
+export const useNoteState = create<NoteState>()(
     persist(
         (set, get) => ({
             name: '',

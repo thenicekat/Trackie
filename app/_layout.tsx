@@ -1,6 +1,7 @@
 import Colors from '@/constants/Colors';
 import { UserInactivityProvider } from '@/context/UserInactivity';
-import { useNoteStore } from '@/store/noteStore';
+import { inactivityMMKVStorage } from '@/store/mmkv';
+import { useNoteState } from '@/store/noteStore';
 import { Ionicons } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
@@ -31,7 +32,7 @@ const InitialLayout = () => {
   });
   const router = useRouter();
   const segments = useSegments();
-  const { name, _hasHydrated } = useNoteStore();
+  const { name, _hasHydrated } = useNoteState();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -45,14 +46,17 @@ const InitialLayout = () => {
   }, [loaded]);
 
   useEffect(() => {
-    // console.debug(`Hydration: ${_hasHydrated} | Loaded: ${loaded} | Name: ${name}`);
     if (!_hasHydrated) return;
     if (!loaded) return;
 
     const inTabsGroup = segments[0] === "(tabs)";
 
     if (name && !inTabsGroup) {
-      router.replace("/(modals)/lock");
+      if (inactivityMMKVStorage.getBoolean('lockEnabled')) {
+        router.replace("/(modals)/lock");
+      } else {
+        router.replace("/(tabs)/notes");
+      }
     } else if (!name && inTabsGroup) {
       router.replace("/");
     }
@@ -71,6 +75,18 @@ const InitialLayout = () => {
       <Stack.Screen name="index" options={{ headerShown: false }} />
 
       <Stack.Screen name="onboard" options={{
+        title: '',
+        headerBackTitle: '',
+        headerShadowVisible: false,
+        headerStyle: { backgroundColor: Colors.background },
+        headerLeft: () => (
+          <TouchableOpacity onPress={router.back}>
+            <Ionicons name="arrow-back" size={34} color={Colors.dark} />
+          </TouchableOpacity>
+        ),
+      }} />
+
+      <Stack.Screen name="settings" options={{
         title: '',
         headerBackTitle: '',
         headerShadowVisible: false,

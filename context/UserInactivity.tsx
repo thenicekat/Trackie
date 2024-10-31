@@ -1,15 +1,11 @@
-import { useNoteStore } from "@/store/noteStore";
+import { inactivityMMKVStorage } from "@/store/mmkv";
+import { useNoteState } from "@/store/noteStore";
 import { useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
 import { AppState, AppStateStatus } from "react-native";
-import { MMKV } from 'react-native-mmkv'
-
-const inactivityMMKVStorage = new MMKV({
-    id: 'notie.inactivity'
-})
 
 export const UserInactivityProvider = ({ children }: any) => {
-    const { name } = useNoteStore();
+    const { name } = useNoteState();
     const appState = useRef(AppState.currentState);
     const router = useRouter();
 
@@ -29,11 +25,15 @@ export const UserInactivityProvider = ({ children }: any) => {
             const currentTime = Date.now();
 
             const timeElapsed = currentTime - startTime;
-            const timeLimit = 1000 * 1; // 5 minutes (in milliseconds)
+            const timeLimit = 1000 * 1; // 1 minute (in ms)
 
-            if (timeElapsed > timeLimit) {
+            if (
+                timeElapsed > timeLimit &&
+                name.length > 0 &&
+                inactivityMMKVStorage.getBoolean('lockEnabled')
+            ) {
+                router.replace("/(modals)/lock");
             }
-            if (name.length > 0) router.replace("/(modals)/lock");
         }
         appState.current = nextAppState;
     }
