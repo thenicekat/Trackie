@@ -6,6 +6,7 @@ import tw from 'twrnc';
 import Colors from '@/constants/Colors';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { keyboardAvoidingBehavior, keyboardVerticalOffset } from '@/app/constants';
+import Header from '@/components/Header';
 
 
 const editNote = () => {
@@ -51,9 +52,7 @@ const editNote = () => {
             behavior={keyboardAvoidingBehavior}
             key="editnote"
         >
-            <Text style={[defaultStyles.sectionHeader, { marginTop: 50 }]}>
-                Hello! {name}
-            </Text>
+            <Header />
 
             <View style={tw`bg-gray-100 h-full p-4 w-full`}>
                 <View style={tw`mb-4`}>
@@ -90,8 +89,7 @@ const editNote = () => {
                     </View>
 
                     <TouchableOpacity
-                        style={[defaultStyles.pillButton, { backgroundColor: titleInput == '' ? Colors.primaryMuted : Colors.primary, marginBottom: 20 }]}
-                        disabled={titleInput == ''}
+                        style={[defaultStyles.pillButton, { backgroundColor: Colors.primary, marginBottom: 20 }]}
                         onPress={editNote}
                     >
                         <Text style={defaultStyles.buttonText}>Edit.</Text>

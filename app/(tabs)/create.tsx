@@ -7,10 +7,12 @@ import Colors from '@/constants/Colors';
 import { keyboardAvoidingBehavior, keyboardVerticalOffset } from '@/app/constants';
 import uuid from 'react-native-uuid';
 import Header from '@/components/Header';
+import { useRouter } from 'expo-router';
 
 
 const addNotes = () => {
-    const { name, addNote } = useNoteState();
+    const { addNote } = useNoteState();
+    const router = useRouter();
 
     const [titleInput, setTitleInput] = React.useState('');
     const [contentInput, setContentInput] = React.useState('');
@@ -28,6 +30,7 @@ const addNotes = () => {
             'Note Created!',
             'Your note has been created.',
         )
+        router.replace('/(tabs)/notes')
     }
 
     return (
@@ -74,9 +77,30 @@ const addNotes = () => {
                         </View>
 
                         <TouchableOpacity
-                            style={[defaultStyles.pillButton, { backgroundColor: titleInput == '' ? Colors.primaryMuted : Colors.primary, marginBottom: 20 }]}
-                            disabled={titleInput == ''}
-                            onPress={createNote}
+                            style={[defaultStyles.pillButton, { backgroundColor: Colors.primary, marginBottom: 20 }]}
+                            onPress={() => {
+                                if (titleInput == '' || contentInput == '') {
+                                    Alert.alert(
+                                        'Confirm your creation.',
+                                        'Are you sure you want to create a note with empty fields?',
+                                        [
+                                            {
+                                                text: 'Yes',
+                                                onPress: () => {
+                                                    createNote()
+                                                }
+                                            },
+                                            {
+                                                text: 'No',
+                                                onPress: () => {
+                                                    return
+                                                }
+                                            }
+                                        ])
+                                } else {
+                                    createNote()
+                                }
+                            }}
                         >
                             <Text style={defaultStyles.buttonText}>Create.</Text>
                         </TouchableOpacity>

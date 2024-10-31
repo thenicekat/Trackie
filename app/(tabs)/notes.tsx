@@ -9,7 +9,7 @@ import Header from '@/components/Header';
 
 
 const notes = () => {
-    const { name, notes, deleteNote } = useNoteState();
+    const { notes, deleteNote } = useNoteState();
     const router = useRouter();
 
     const [searchInput, setSearchInput] = React.useState('');
