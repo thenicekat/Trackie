@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TextInput, Alert, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TextInput, Alert, TouchableOpacity, Switch } from 'react-native'
 import React, { useEffect } from 'react'
 import { Note, useNoteState } from '@/store/noteStore'
 import { defaultStyles } from '@/constants/Styles';
@@ -6,7 +6,6 @@ import tw from 'twrnc';
 import Colors from '@/constants/Colors';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { keyboardAvoidingBehavior, keyboardVerticalOffset } from '@/app/constants';
-import Header from '@/components/Header';
 
 
 const editNote = () => {
@@ -17,31 +16,33 @@ const editNote = () => {
     const [editableNote, setEditableNote] = React.useState<Note | null>(null);
     const [titleInput, setTitleInput] = React.useState('');
     const [contentInput, setContentInput] = React.useState('');
+    const [hiddenInput, setHiddenInput] = React.useState(false);
 
     useEffect(() => {
         const note = notes.find((note) => note.id === id);
         if (!note) {
-            router.replace('/(tabs)/notes')
+            router.replace('/notes')
             return
         }
         setEditableNote(note)
         setTitleInput(note.title)
         setContentInput(note.content)
+        setHiddenInput(note.hidden)
     }, [id, notes])
 
     const editNote = () => {
         if (!editableNote) {
-            router.replace('/(tabs)/notes')
+            router.replace('/notes')
             return
         }
-        updateNote({ ...editableNote, title: titleInput, content: contentInput })
+        updateNote({ ...editableNote, title: titleInput, content: contentInput, hidden: hiddenInput })
         setTitleInput('')
         setContentInput('')
         Alert.alert(
             'Note Edited!',
             'Your note has edited successfully.',
         )
-        router.replace('/(tabs)/notes')
+        router.replace('/notes')
         return
     }
 
@@ -52,9 +53,7 @@ const editNote = () => {
             behavior={keyboardAvoidingBehavior}
             key="editnote"
         >
-            <Header />
-
-            <View style={tw`bg-gray-100 h-full p-4 w-full`}>
+            <View style={tw`h-full p-4 w-full`}>
                 <View style={tw`mb-4`}>
                     <Text style={tw`text-4xl font-bold`}>Edit Note.</Text>
                 </View>
@@ -85,6 +84,18 @@ const editNote = () => {
                             value={contentInput}
                             onChangeText={setContentInput}
                             multiline={true}
+                        />
+                    </View>
+
+                    <View style={tw`justify-between flex-row w-full mb-2`}>
+                        <Text style={tw`text-xl m-2`}>Hide the text on homescreen.</Text>
+
+                        <Switch
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={() => {
+                                setHiddenInput(!hiddenInput)
+                            }}
+                            value={hiddenInput}
                         />
                     </View>
 

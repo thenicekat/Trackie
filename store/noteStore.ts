@@ -6,6 +6,7 @@ export interface Note {
     id: string;
     title: string;
     content: string;
+    hidden: boolean;
 }
 
 interface NoteState {

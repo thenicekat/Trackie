@@ -5,7 +5,7 @@ import { useNoteState } from '@/store/noteStore';
 import { Ionicons } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
-import { Link, Stack, useRouter, useSegments } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -49,15 +49,15 @@ const InitialLayout = () => {
     if (!_hasHydrated) return;
     if (!loaded) return;
 
-    const inTabsGroup = segments[0] === "(tabs)";
+    const inNotes = segments[0] === "notes";
 
-    if (name && !inTabsGroup) {
+    if (name && !inNotes) {
       if (inactivityMMKVStorage.getBoolean('lockEnabled')) {
         router.replace("/(modals)/lock");
       } else {
-        router.replace("/(tabs)/notes");
+        router.replace("/notes");
       }
-    } else if (!name && inTabsGroup) {
+    } else if (!name && inNotes) {
       router.replace("/");
     }
   }, [_hasHydrated, loaded, name]);
@@ -70,9 +70,18 @@ const InitialLayout = () => {
     );
   }
 
+  const hideHeaderOptions = {
+    title: '',
+    headerBackTitle: '',
+    headerShadowVisible: false,
+    headerShown: false,
+  }
+
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="(modals)/lock" options={hideHeaderOptions} />
+
+      <Stack.Screen name="index" options={hideHeaderOptions} />
 
       <Stack.Screen name="onboard" options={{
         title: '',
@@ -92,26 +101,38 @@ const InitialLayout = () => {
         headerShadowVisible: false,
         headerStyle: { backgroundColor: Colors.background },
         headerLeft: () => (
+          <TouchableOpacity onPress={() => {
+            router.navigate('/notes')
+          }}>
+            <Ionicons name="arrow-back" size={34} color={Colors.dark} />
+          </TouchableOpacity>
+        ),
+      }} />
+
+      <Stack.Screen name="notes/index" options={hideHeaderOptions} />
+      <Stack.Screen name="notes/create" options={{
+        title: '',
+        headerBackTitle: '',
+        headerShadowVisible: false,
+        headerStyle: { backgroundColor: Colors.background },
+        headerLeft: () => (
+          <TouchableOpacity onPress={router.back}>
+            <Ionicons name="arrow-back" size={34} color={Colors.dark} />
+          </TouchableOpacity>
+        ),
+      }} />
+      <Stack.Screen name="notes/edit/[id]" options={{
+        title: '',
+        headerBackTitle: '',
+        headerShadowVisible: false,
+        headerStyle: { backgroundColor: Colors.background },
+        headerLeft: () => (
           <TouchableOpacity onPress={router.back}>
             <Ionicons name="arrow-back" size={34} color={Colors.dark} />
           </TouchableOpacity>
         ),
       }} />
 
-      <Stack.Screen name="(tabs)" options={{
-        title: '',
-        headerBackTitle: '',
-        headerShadowVisible: false,
-        headerShown: false,
-      }} />
-
-      <Stack.Screen name="(modals)/lock" options={{
-        title: '',
-        headerBackTitle: '',
-        headerShadowVisible: false,
-        headerShown: false,
-        animation: 'none'
-      }} />
 
     </Stack>
   );

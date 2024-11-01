@@ -47,7 +47,7 @@ const Settings = () => {
 
 
                 <View style={tw`justify-between flex-row w-full`}>
-                    <Text style={tw`text-xl m-2`}>Biometric Lock</Text>
+                    <Text style={tw`text-xl m-2`}>Lock the app.</Text>
 
                     <Switch
                         ios_backgroundColor="#3e3e3e"

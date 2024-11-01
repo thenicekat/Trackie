@@ -29,7 +29,7 @@ const lockScreen = () => {
         });
 
         if (result.success) {
-            router.replace('/(tabs)/notes');
+            router.replace('/notes');
         }
     }
 

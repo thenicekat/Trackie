@@ -15,7 +15,7 @@ const LogIn = () => {
 
     const onBoard = (name: string) => {
         setName(name)
-        router.push("/(tabs)/notes")
+        router.push("/notes")
     };
 
     return (

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, TextInput, Alert, ScrollView, Switch } from 'react-native'
 import React from 'react'
 import { useNoteState } from '@/store/noteStore'
 import { defaultStyles } from '@/constants/Styles';
@@ -6,7 +6,6 @@ import tw from 'twrnc';
 import Colors from '@/constants/Colors';
 import { keyboardAvoidingBehavior, keyboardVerticalOffset } from '@/app/constants';
 import uuid from 'react-native-uuid';
-import Header from '@/components/Header';
 import { useRouter } from 'expo-router';
 
 
@@ -16,13 +15,15 @@ const addNotes = () => {
 
     const [titleInput, setTitleInput] = React.useState('');
     const [contentInput, setContentInput] = React.useState('');
+    const [hiddenInput, setHiddenInput] = React.useState(false);
 
     const createNote = () => {
         let id = uuid.v4().toString()
         addNote({
             id: id,
             title: titleInput,
-            content: contentInput
+            content: contentInput,
+            hidden: hiddenInput
         })
         setTitleInput('')
         setContentInput('')
@@ -30,7 +31,7 @@ const addNotes = () => {
             'Note Created!',
             'Your note has been created.',
         )
-        router.replace('/(tabs)/notes')
+        router.replace('/notes')
     }
 
     return (
@@ -41,11 +42,10 @@ const addNotes = () => {
             key="addnote"
         >
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <Header />
 
-                <View style={tw`bg-gray-100 h-full p-4 w-full`}>
+                <View style={tw`h-full p-4 w-full`}>
                     <View style={tw`mb-4`}>
-                        <Text style={tw`text-4xl font-bold`}>Create New Note.</Text>
+                        <Text style={tw`text-4xl font-bold`}>Create Note.</Text>
                     </View>
 
                     <View style={tw`h-[1px] bg-slate-500 my-1 w-full`} />
@@ -73,6 +73,18 @@ const addNotes = () => {
                                 value={contentInput}
                                 onChangeText={setContentInput}
                                 multiline={true}
+                            />
+                        </View>
+
+                        <View style={tw`justify-between flex-row w-full mb-2`}>
+                            <Text style={tw`text-xl m-2`}>Hide the text on homescreen.</Text>
+
+                            <Switch
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={() => {
+                                    setHiddenInput(!hiddenInput)
+                                }}
+                                value={hiddenInput}
                             />
                         </View>
 
