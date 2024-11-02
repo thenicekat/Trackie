@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TextInput, Alert, TouchableOpacity, Switch } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TextInput, Alert, TouchableOpacity, Switch, ScrollView } from 'react-native'
 import React, { useEffect } from 'react'
 import { Note, useNoteState } from '@/store/noteStore'
 import { defaultStyles } from '@/constants/Styles';
@@ -53,61 +53,68 @@ const editNote = () => {
             behavior={keyboardAvoidingBehavior}
             key="editnote"
         >
-            <View style={tw`h-full p-4 w-full`}>
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-4xl font-bold`}>Edit Note.</Text>
-                </View>
 
-                <View style={tw`h-[1px] bg-slate-500 my-1 w-full`} />
+            <ScrollView contentContainerStyle={{
+                flexGrow: 1,
+                backgroundColor: Colors.background
+            }}>
 
-
-                <View style={defaultStyles.container}>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={[styles.smolInput, { flex: 1 }]}
-                            placeholder="Please enter a title."
-                            keyboardType='default'
-                            value={titleInput}
-                            onChangeText={setTitleInput}
-                        />
+                <View style={tw`h-full p-4 w-full`}>
+                    <View style={tw`mb-4`}>
+                        <Text style={tw`text-4xl font-bold`}>Edit Note.</Text>
                     </View>
 
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={[styles.bigInput, {
-                                flex: 1,
-                                alignContent: 'flex-start',
-                                verticalAlign: 'top'
-                            }]}
-                            placeholder="Please enter your note here."
-                            keyboardType='default'
-                            value={contentInput}
-                            onChangeText={setContentInput}
-                            multiline={true}
-                        />
-                    </View>
+                    <View style={tw`h-[1px] bg-slate-500 my-1 w-full`} />
 
-                    <View style={tw`justify-between flex-row w-full mb-2`}>
-                        <Text style={tw`text-xl m-2`}>Hide the text on homescreen.</Text>
 
-                        <Switch
-                            ios_backgroundColor="#3e3e3e"
-                            onValueChange={() => {
-                                setHiddenInput(!hiddenInput)
-                            }}
-                            value={hiddenInput}
-                        />
-                    </View>
+                    <View style={defaultStyles.container}>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={[styles.smolInput, { flex: 1 }]}
+                                placeholder="Please enter a title."
+                                keyboardType='default'
+                                value={titleInput}
+                                onChangeText={setTitleInput}
+                            />
+                        </View>
 
-                    <TouchableOpacity
-                        style={[defaultStyles.pillButton, { backgroundColor: Colors.primary, marginBottom: 20 }]}
-                        onPress={editNote}
-                    >
-                        <Text style={defaultStyles.buttonText}>Edit.</Text>
-                    </TouchableOpacity>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={[styles.bigInput, {
+                                    flex: 1,
+                                    alignContent: 'flex-start',
+                                    verticalAlign: 'top'
+                                }]}
+                                placeholder="Please enter your note here."
+                                keyboardType='default'
+                                value={contentInput}
+                                onChangeText={setContentInput}
+                                multiline={true}
+                            />
+                        </View>
+
+                        <View style={tw`justify-between flex-row w-full mb-2`}>
+                            <Text style={tw`text-xl m-2`}>Hide the text on homescreen.</Text>
+
+                            <Switch
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={() => {
+                                    setHiddenInput(!hiddenInput)
+                                }}
+                                value={hiddenInput}
+                            />
+                        </View>
+
+                        <TouchableOpacity
+                            style={[defaultStyles.pillButton, { backgroundColor: Colors.primary, marginBottom: 20 }]}
+                            onPress={editNote}
+                        >
+                            <Text style={defaultStyles.buttonText}>Edit.</Text>
+                        </TouchableOpacity>
+                    </View >
+
                 </View >
-
-            </View >
+            </ScrollView>
         </KeyboardAvoidingView>
     )
 }

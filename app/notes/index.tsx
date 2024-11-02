@@ -26,7 +26,9 @@ const notes = () => {
 
     return (
         <View style={{ flex: 1 }}>
-            <ScrollView>
+            <ScrollView
+                style={{ backgroundColor: Colors.background }}
+            >
                 <Header />
 
                 <View style={tw`h-full p-4 w-full`}>

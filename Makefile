@@ -11,4 +11,3 @@ aab-release:
 	cd android && ./gradlew bundleRelease --stacktrace
 	@echo "AAB built successfully!"
 .PHONY: aab-release
-

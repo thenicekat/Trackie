@@ -41,7 +41,7 @@ const lockScreen = () => {
                 Hello! {name}
             </Text>
 
-            <View style={tw`bg-gray-100 flex-1 p-4 w-full`}>
+            <View style={tw`flex-1 p-4 w-full`}>
                 <View style={tw`mb-4`}>
                     <Text style={tw`text-4xl font-bold`}>Locked.</Text>
                 </View>

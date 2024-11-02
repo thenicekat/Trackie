@@ -15,7 +15,7 @@ const LogIn = () => {
 
     const onBoard = (name: string) => {
         setName(name)
-        router.push("/notes")
+        router.replace("/notes")
     };
 
     return (

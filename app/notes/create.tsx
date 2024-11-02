@@ -31,7 +31,11 @@ const addNotes = () => {
             'Note Created!',
             'Your note has been created.',
         )
-        router.replace('/notes')
+        if (router.canDismiss()) {
+            router.dismiss()
+        } else {
+            router.replace("/notes")
+        }
     }
 
     return (
@@ -41,7 +45,10 @@ const addNotes = () => {
             behavior={keyboardAvoidingBehavior}
             key="addnote"
         >
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <ScrollView contentContainerStyle={{
+                flexGrow: 1,
+                backgroundColor: Colors.background
+            }}>
 
                 <View style={tw`h-full p-4 w-full`}>
                     <View style={tw`mb-4`}>

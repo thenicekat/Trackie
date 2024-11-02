@@ -9,8 +9,9 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { TouchableOpacity, Text, ActivityIndicator, View } from 'react-native';
+import { TouchableOpacity, ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import * as SystemUI from "expo-system-ui"
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -41,6 +42,7 @@ const InitialLayout = () => {
 
   useEffect(() => {
     if (loaded) {
+      SystemUI.setBackgroundColorAsync(Colors.background)
       SplashScreen.hideAsync();
     }
   }, [loaded]);
@@ -89,7 +91,13 @@ const InitialLayout = () => {
         headerShadowVisible: false,
         headerStyle: { backgroundColor: Colors.background },
         headerLeft: () => (
-          <TouchableOpacity onPress={router.back}>
+          <TouchableOpacity onPress={() => {
+            if (router.canDismiss()) {
+              router.dismiss()
+            } else {
+              router.replace("/notes")
+            }
+          }}>
             <Ionicons name="arrow-back" size={34} color={Colors.dark} />
           </TouchableOpacity>
         ),
@@ -100,13 +108,6 @@ const InitialLayout = () => {
         headerBackTitle: '',
         headerShadowVisible: false,
         headerStyle: { backgroundColor: Colors.background },
-        headerLeft: () => (
-          <TouchableOpacity onPress={() => {
-            router.navigate('/notes')
-          }}>
-            <Ionicons name="arrow-back" size={34} color={Colors.dark} />
-          </TouchableOpacity>
-        ),
       }} />
 
       <Stack.Screen name="notes/index" options={hideHeaderOptions} />
@@ -115,22 +116,12 @@ const InitialLayout = () => {
         headerBackTitle: '',
         headerShadowVisible: false,
         headerStyle: { backgroundColor: Colors.background },
-        headerLeft: () => (
-          <TouchableOpacity onPress={router.back}>
-            <Ionicons name="arrow-back" size={34} color={Colors.dark} />
-          </TouchableOpacity>
-        ),
       }} />
       <Stack.Screen name="notes/edit/[id]" options={{
         title: '',
         headerBackTitle: '',
         headerShadowVisible: false,
         headerStyle: { backgroundColor: Colors.background },
-        headerLeft: () => (
-          <TouchableOpacity onPress={router.back}>
-            <Ionicons name="arrow-back" size={34} color={Colors.dark} />
-          </TouchableOpacity>
-        ),
       }} />
 
 
