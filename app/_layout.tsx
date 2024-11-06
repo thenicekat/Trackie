@@ -80,52 +80,57 @@ const InitialLayout = () => {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="(modals)/lock" options={hideHeaderOptions} />
+    <View style={{ flex: 1 }}>
+      <Stack
+        screenOptions={{
+          statusBarColor: "#0B0B0B",
+          statusBarStyle: "light",
+        }}
+      >
+        <Stack.Screen name="(modals)/lock" options={hideHeaderOptions} />
 
-      <Stack.Screen name="index" options={hideHeaderOptions} />
+        <Stack.Screen name="index" options={hideHeaderOptions} />
 
-      <Stack.Screen name="onboard" options={{
-        title: '',
-        headerBackTitle: '',
-        headerShadowVisible: false,
-        headerStyle: { backgroundColor: Colors.background },
-        headerLeft: () => (
-          <TouchableOpacity onPress={() => {
-            if (router.canDismiss()) {
-              router.dismiss()
-            } else {
-              router.replace("/notes")
-            }
-          }}>
-            <Ionicons name="arrow-back" size={34} color={Colors.dark} />
-          </TouchableOpacity>
-        ),
-      }} />
+        <Stack.Screen name="onboard" options={{
+          title: '',
+          headerBackTitle: '',
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: Colors.background },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => {
+              if (router.canDismiss()) {
+                router.dismiss()
+              } else {
+                router.replace("/notes")
+              }
+            }}>
+              <Ionicons name="arrow-back" size={34} color={Colors.dark} />
+            </TouchableOpacity>
+          ),
+        }} />
 
-      <Stack.Screen name="settings" options={{
-        title: '',
-        headerBackTitle: '',
-        headerShadowVisible: false,
-        headerStyle: { backgroundColor: Colors.background },
-      }} />
+        <Stack.Screen name="settings" options={{
+          title: '',
+          headerBackTitle: '',
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: Colors.background },
+        }} />
 
-      <Stack.Screen name="notes/index" options={hideHeaderOptions} />
-      <Stack.Screen name="notes/create" options={{
-        title: '',
-        headerBackTitle: '',
-        headerShadowVisible: false,
-        headerStyle: { backgroundColor: Colors.background },
-      }} />
-      <Stack.Screen name="notes/edit/[id]" options={{
-        title: '',
-        headerBackTitle: '',
-        headerShadowVisible: false,
-        headerStyle: { backgroundColor: Colors.background },
-      }} />
-
-
-    </Stack>
+        <Stack.Screen name="notes/index" options={hideHeaderOptions} />
+        <Stack.Screen name="notes/create" options={{
+          title: '',
+          headerBackTitle: '',
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: Colors.background },
+        }} />
+        <Stack.Screen name="notes/edit/[id]" options={{
+          title: '',
+          headerBackTitle: '',
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: Colors.background },
+        }} />
+      </Stack>
+    </View>
   );
 }
 
@@ -134,7 +139,6 @@ const RootLayoutNav = () => {
     <>
       <UserInactivityProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <StatusBar style="dark" />
           <InitialLayout />
         </GestureHandlerRootView>
       </UserInactivityProvider>

@@ -14,7 +14,8 @@
         },
         "ios": {
             "supportsTablet": true,
-            "bundleIdentifier": "com.divyateja.notie"
+            "bundleIdentifier": "com.divyateja.notie",
+            "userInterfaceStyle": "automatic"
         },
         "android": {
             "adaptiveIcon": {
@@ -22,7 +23,8 @@
                 "backgroundColor": "#ffffff"
             },
             "package": "com.divyateja.notie",
-            "softwareKeyboardLayoutMode": "pan"
+            "softwareKeyboardLayoutMode": "pan",
+            "userInterfaceStyle": "automatic"
         },
         "web": {
             "bundler": "metro",

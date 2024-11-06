@@ -26,79 +26,79 @@ const notes = () => {
 
     return (
         <View style={{ flex: 1 }}>
-            <ScrollView
-                style={{ backgroundColor: Colors.background }}
-            >
-                <Header />
+            <Header />
 
-                <View style={tw`h-full p-4 w-full`}>
-                    <View style={tw`mb-4`}>
-                        <Text style={tw`text-4xl font-bold`}>Your Notes.</Text>
-                    </View>
-
-                    <View style={tw`h-[1px] bg-slate-500 my-1 w-full`} />
-
-                    <View style={tw`flex-row my-2`}>
-                        <TextInput
-                            style={
-                                tw`border-2 border-gray-300 p-3 w-full rounded-lg`
-                            }
-                            placeholder="Search."
-                            keyboardType='default'
-                            value={searchInput}
-                            onChangeText={setSearchInput}
-                        />
-                    </View>
-
-                    {
-                        filteredNotes.length == 0 ?
-                            <View>
-                                <Text style={tw`text-xl m-2`}>No notes found.</Text>
-                            </View>
-                            : filteredNotes.map((note) => (
-                                <TouchableOpacity
-                                    key={note.id}
-                                    style={tw`bg-white p-2 my-2 rounded-lg flex-row justify-between`}
-                                    onPress={() => {
-                                        router.push(`/notes/edit/${note.id}`)
-                                    }}
-                                >
-
-                                    <View
-                                        style={tw`flex-1 justify-center p-2`}
-                                    >
-                                        <Text style={tw`text-xl font-bold uppercase`}>
-                                            {note.hidden ? '*****' : note.title}
-                                        </Text>
-                                        <Text style={tw`text-lg`}>
-                                            {note.hidden ? '*************' : note.content.slice(0, 100)}
-                                        </Text>
-                                    </View>
-
-                                    <FontAwesome
-                                        name="trash"
-                                        size={30}
-                                        color={'red'}
-                                        style={tw`w-10 h-10 text-center m-2`}
-                                        onPress={() => {
-                                            Alert.alert('Confirm your deletion.', 'Are you sure you want to delete.', [
-                                                {
-                                                    text: 'Yes',
-                                                    onPress: () => {
-                                                        deleteNoteWithID(note.id)
-                                                    }
-                                                },
-                                                {
-                                                    text: 'No',
-                                                    onPress: () => { }
-                                                }
-                                            ])
-                                        }}
-                                    />
-                                </TouchableOpacity>
-                            ))
-                    }
+            <View style={tw`px-4`}>
+                <View style={tw`mb-4`}>
+                    <Text style={tw`text-4xl font-bold`}>Your Notes.</Text>
                 </View>
+
+                <View style={tw`h-[1px] bg-slate-500 my-1 w-full`} />
+
+                <View style={tw`flex-row my-2`}>
+                    <TextInput
+                        style={
+                            tw`border-2 border-gray-300 p-3 w-full rounded-lg`
+                        }
+                        placeholder="Search."
+                        keyboardType='default'
+                        value={searchInput}
+                        onChangeText={setSearchInput}
+                    />
+                </View>
+            </View>
+
+            <ScrollView
+                style={tw`px-4 pb-4`}
+            >
+                {
+                    filteredNotes.length == 0 ?
+                        <View>
+                            <Text style={tw`text-xl m-2`}>No notes found.</Text>
+                        </View>
+                        : filteredNotes.map((note) => (
+                            <TouchableOpacity
+                                key={note.id}
+                                style={tw`bg-white p-2 my-2 rounded-lg flex-row justify-between`}
+                                onPress={() => {
+                                    router.push(`/notes/edit/${note.id}`)
+                                }}
+                            >
+
+                                <View
+                                    style={tw`flex-1 justify-center p-2`}
+                                >
+                                    <Text style={tw`text-xl font-bold uppercase`}>
+                                        {note.hidden ? '*****' : note.title}
+                                    </Text>
+                                    <Text style={tw`text-lg`}>
+                                        {note.hidden ? '*************' : note.content.slice(0, 100)}
+                                    </Text>
+                                </View>
+
+                                <FontAwesome
+                                    name="trash"
+                                    size={30}
+                                    color={'red'}
+                                    style={tw`w-10 h-10 text-center m-2`}
+                                    onPress={() => {
+                                        Alert.alert('Confirm your deletion.', 'Are you sure you want to delete.', [
+                                            {
+                                                text: 'Yes',
+                                                onPress: () => {
+                                                    deleteNoteWithID(note.id)
+                                                }
+                                            },
+                                            {
+                                                text: 'No',
+                                                onPress: () => { }
+                                            }
+                                        ])
+                                    }}
+                                />
+                            </TouchableOpacity>
+                        ))
+                }
             </ScrollView >
             <TouchableOpacity
                 style={{
