@@ -72,7 +72,7 @@ const notes = () => {
                                         {note.hidden ? '*****' : note.title}
                                     </Text>
                                     <Text style={tw`text-lg`}>
-                                        {note.hidden ? '*************' : note.content.slice(0, 100)}
+                                        {note.hidden ? '*************' : note.content.slice(0, 10)}
                                     </Text>
                                 </View>
 
